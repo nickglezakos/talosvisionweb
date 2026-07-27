@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TalosVision — Hero Section Proposals</title>
+<style>
+  :root {
+    --abyss: #040D18;
+    --deep-navy: #0A1628;
+    --midnight: #0F2142;
+    --electric: #0C1E3D;
+    --volt: #142C54;
+    --cyan: #00D4FF;
+    --azure: #3B82F6;
+    --ice: #E8F4FD;
+    --white: #FFFFFF;
+    --steel-text: #8899AA;
+    --font-display: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-body: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { font-family: var(--font-body); background: var(--abyss); color: var(--white); line-height: 1.6; overflow-x: hidden; }
+
+  /* ============================================================
+     SHARED: SECTION HEADER & NAVIGATION
+     ============================================================ */
+  .proposal-label {
+    position: absolute;
+    top: clamp(1rem, 3vh, 2rem);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    display: inline-block;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--abyss);
+    background: var(--cyan);
+    white-space: nowrap;
+  }
+
+  .jump-nav {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200;
+    display: flex;
+    gap: 0.5rem;
+    background: rgba(4, 13, 24, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 212, 255, 0.15);
+    border-radius: 100px;
+    padding: 0.35rem;
+  }
+  .jump-nav a {
+    display: block;
+    padding: 0.4rem 1.1rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    color: var(--steel-text);
+    border-radius: 100px;
+    transition: all 0.25s;
+    white-space: nowrap;
+  }
+  .jump-nav a:hover,
+  .jump-nav a:focus-visible {
+    color: var(--white);
+    background: rgba(0, 212, 255, 0.12);
+  }
+  .jump-nav a.active {
+    color: var(--abyss);
+    background: var(--cyan);
+  }
+
+  /* ============================================================
+     SHARED HERO BASE
+     ============================================================ */
+  .hero-base {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    padding: clamp(4rem, 10vh, 8rem) clamp(0.5rem, 3vw, 1.5rem);
+  }
+
+  /* ============================================================
+     SHARED TYPOGRAPHY / ELEMENTS
+     ============================================================ */
+  .logo-wordmark {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--ice);
+    line-height: 0.9;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .logo-wordmark .logo-vision {
+    background: linear-gradient(90deg, var(--cyan), var(--azure), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .logo-underline {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, rgba(0,212,255,0.3) 10%, var(--cyan) 30%, var(--azure) 50%, var(--cyan) 70%, rgba(0,212,255,0.3) 90%, transparent 100%);
+  }
+  .logo-text-layer {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .logo-container {
+    width: 100%;
+    max-width: 860px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+  .hero-tagline {
+    font-size: clamp(1rem, 2.5vw, 1.35rem);
+    color: var(--cyan);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    max-width: 600px;
+  }
+  .hero-tagline em { font-style: italic; color: var(--azure); }
+  .hero-subtitle {
+    font-size: clamp(0.85rem, 1.8vw, 1.05rem);
+    color: var(--steel-text);
+    max-width: 540px;
+  }
+  .hero-divider {
+    width: 100%;
+    max-width: 300px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, rgba(0,212,255,0.3) 15%, var(--cyan) 30%, var(--azure) 50%, var(--cyan) 70%, rgba(0,212,255,0.3) 85%, transparent 100%);
+    position: relative;
+  }
+  .hero-divider::before, .hero-divider::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    width: 10px;
+    height: 10px;
+    border: 1.5px solid var(--cyan);
+    border-radius: 50%;
+    background: var(--abyss);
+  }
+  .hero-divider::before { left: calc(50% - 30px); }
+  .hero-divider::after  { right: calc(50% - 30px); }
+  .hero-cta {
+    position: relative;
+    z-index: 5;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: clamp(1rem, 3vh, 2.5rem);
+    padding: 0.9rem 2rem;
+    background: transparent;
+    border: 2px solid var(--cyan);
+    color: var(--cyan);
+    font-size: 0.95rem;
+    font-weight: 700;
+    font-family: var(--font-body);
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .hero-cta:hover, .hero-cta:focus-visible {
+    background: var(--cyan);
+    color: var(--abyss);
+  }
+  .hero-cta svg { flex-shrink: 0; }
+
+  ::selection { background: rgba(0, 212, 255, 0.25); color: var(--white); }
+  :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+
+  /* ============================================================
+     VARIATION 1 — THE CIRCUIT GRID
+     ============================================================ */
+  .v1-hero {
+    background: linear-gradient(180deg, #020810 0%, var(--abyss) 40%, var(--electric) 100%);
+  }
+  .v1-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(135deg, rgba(0, 212, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(225deg, rgba(0, 212, 255, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: meshDriftV1 25s linear infinite;
+    z-index: 1;
+    pointer-events: none;
+  }
+  @keyframes meshDriftV1 {
+    0%   { background-position: 0 0, 0 0; }
+    100% { background-position: 80px 80px, -80px 80px; }
+  }
+  .v1-hero::after {
+    content: '';
+    position: absolute;
+    width: 900px;
+    height: 900px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 212, 255, 0.12) 0%, transparent 65%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    animation: orbPulseV1 6s ease-in-out infinite;
+  }
+  @keyframes orbPulseV1 {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    50%      { transform: translate(-50%, -50%) scale(1.35); opacity: 0.55; }
+  }
+
+  /* V1: Large concentric rings behind logo */
+  .v1-ring-accent {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .v1-ring-accent svg {
+    width: min(700px, 90vw);
+    height: auto;
+    opacity: 0.12;
+    animation: ringPulseV1 5s ease-in-out infinite;
+  }
+  @keyframes ringPulseV1 {
+    0%, 100% { opacity: 0.10; }
+    50%      { opacity: 0.18; }
+  }
+
+  /* V1: Animated circuit node dots */
+  .v1-nodes {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .v1-node {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--cyan);
+    opacity: 0;
+    animation: nodeBlink 3s ease-in-out infinite;
+  }
+  .v1-node:nth-child(1)  { top: 15%; left: 12%; animation-delay: 0s; }
+  .v1-node:nth-child(2)  { top: 18%; right: 14%; animation-delay: 0.5s; }
+  .v1-node:nth-child(3)  { bottom: 20%; left: 10%; animation-delay: 1s; }
+  .v1-node:nth-child(4)  { bottom: 15%; right: 12%; animation-delay: 1.5s; }
+  .v1-node:nth-child(5)  { top: 40%; left: 8%; animation-delay: 2s; width: 4px; height: 4px; }
+  .v1-node:nth-child(6)  { top: 35%; right: 10%; animation-delay: 2.5s; width: 4px; height: 4px; }
+  .v1-node:nth-child(7)  { bottom: 40%; left: 15%; animation-delay: 0.75s; }
+  .v1-node:nth-child(8)  { bottom: 35%; right: 8%; animation-delay: 1.25s; }
+  @keyframes nodeBlink {
+    0%, 100% { opacity: 0; transform: scale(0.6); }
+    20%      { opacity: 0.9; transform: scale(1.4); }
+    40%      { opacity: 0.4; transform: scale(1); }
+    60%      { opacity: 0; transform: scale(0.6); }
+  }
+
+  /* V1: Horizontal circuit traces */
+  .v1-traces {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .v1-trace {
+    position: absolute;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,212,255,0.15), rgba(59,130,246,0.1), transparent);
+  }
+  .v1-trace:nth-child(1) { top: 25%; left: 5%; right: 5%; width: auto; }
+  .v1-trace:nth-child(2) { top: 35%; left: 10%; right: 10%; width: auto; opacity: 0.6; }
+  .v1-trace:nth-child(3) { top: 65%; left: 8%; right: 8%; width: auto; opacity: 0.7; }
+  .v1-trace:nth-child(4) { top: 75%; left: 4%; right: 4%; width: auto; opacity: 0.4; }
+
+  /* ============================================================
+     VARIATION 2 — THE WATCHER'S GAZE
+     ============================================================ */
+  .v2-hero {
+    background: linear-gradient(180deg, #010510 0%, var(--deep-navy) 30%, var(--abyss) 70%, #020810 100%);
+  }
+  .v2-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,212,255,0.02) 2px, rgba(0,212,255,0.02) 4px);
+    z-index: 1;
+    pointer-events: none;
+    animation: scanLines 10s linear infinite;
+  }
+  @keyframes scanLines {
+    0%   { background-position: 0 0; }
+    100% { background-position: 0 60px; }
+  }
+
+  /* V2: Central eye motif */
+  .v2-eye-container {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .v2-eye-container svg {
+    width: min(500px, 80vw);
+    height: auto;
+    opacity: 0.14;
+  }
+
+  /* V2: Peripheral glow orbs */
+  .v2-glow {
+    position: absolute;
+    border-radius: 50%;
+    z-index: 0;
+    pointer-events: none;
+    filter: blur(60px);
+  }
+  .v2-glow--top {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(0,212,255,0.10) 0%, transparent 70%);
+    top: -80px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: v2GlowTop 7s ease-in-out infinite;
+  }
+  .v2-glow--center {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 60%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: v2GlowCenter 8s ease-in-out infinite alternate;
+  }
+  @keyframes v2GlowTop {
+    0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(1); }
+    50%      { opacity: 1; transform: translateX(-50%) scale(1.2); }
+  }
+  @keyframes v2GlowCenter {
+    0%   { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.15); }
+  }
+
+  /* V2: Floating particle accents */
+  .v2-particles {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .v2-particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--cyan);
+    opacity: 0;
+    animation: particleDrift 8s ease-in-out infinite;
+  }
+  .v2-particle:nth-child(1)  { top: 20%; left: 20%; animation-delay: 0s; }
+  .v2-particle:nth-child(2)  { top: 25%; right: 22%; animation-delay: 1.5s; }
+  .v2-particle:nth-child(3)  { bottom: 22%; left: 25%; animation-delay: 3s; }
+  .v2-particle:nth-child(4)  { bottom: 25%; right: 20%; animation-delay: 4.5s; }
+  .v2-particle:nth-child(5)  { top: 10%; left: 40%; animation-delay: 6s; width: 2px; height: 2px; }
+  .v2-particle:nth-child(6)  { top: 12%; right: 38%; animation-delay: 2s; width: 2px; height: 2px; }
+  .v2-particle:nth-child(7)  { bottom: 10%; left: 45%; animation-delay: 5s; }
+  .v2-particle:nth-child(8)  { bottom: 15%; right: 42%; animation-delay: 1s; width: 2px; height: 2px; }
+  @keyframes particleDrift {
+    0%, 100% { opacity: 0; transform: translateY(0) scale(0.5); }
+    10%      { opacity: 0.8; transform: translateY(-10px) scale(1.2); }
+    25%      { opacity: 0.4; transform: translateY(-5px) scale(1); }
+    40%      { opacity: 0; transform: translateY(0) scale(0.5); }
+  }
+
+  /* ============================================================
+     VARIATION 3 — THE BRONZE SENTINEL (duotone photo background)
+     ============================================================ */
+  .v3-hero {
+    position: relative;
+    background: var(--abyss);
+  }
+  .v3-bg-photo {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image: url('../assets/talosvision-sonar.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.30;
+    filter: grayscale(100%) brightness(0.85) contrast(1.3);
+  }
+  .v3-bg-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    /* Duotone: abyss-to-cyan gradient blended over the photo */
+    background: linear-gradient(
+      180deg,
+      var(--abyss) 0%,
+      rgba(4, 13, 24, 0.65) 25%,
+      rgba(0, 212, 255, 0.08) 50%,
+      rgba(4, 13, 24, 0.65) 75%,
+      var(--abyss) 100%
+    );
+  }
+  .v3-bg-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 45%, rgba(0,212,255,0.10) 0%, transparent 60%);
+  }
+
+  /* V3: Subtle diagonal mesh over photo */
+  .v3-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background-image:
+      linear-gradient(135deg, rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(225deg, rgba(59,130,246,0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: meshDriftV3 30s linear infinite;
+  }
+  @keyframes meshDriftV3 {
+    0%   { background-position: 0 0, 0 0; }
+    100% { background-position: 100px 100px, -100px 100px; }
+  }
+
+  /* V3: Faint concentric ring behind the logo */
+  .v3-ring-accent {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .v3-ring-accent svg {
+    width: min(550px, 75vw);
+    height: auto;
+    opacity: 0.07;
+    animation: ringPulseV3 6s ease-in-out infinite;
+  }
+  @keyframes ringPulseV3 {
+    0%, 100% { opacity: 0.06; }
+    50%      { opacity: 0.12; }
+  }
+
+  /* ============================================================
+     VARIATION 4 — AETHER DRONE (duotone photo background)
+     ============================================================ */
+  .v4-hero {
+    position: relative;
+    background: var(--abyss);
+  }
+  .v4-bg-photo {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image: url('../assets/talosvision-aether.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.30;
+    filter: grayscale(100%) brightness(0.85) contrast(1.3);
+  }
+  .v4-bg-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      var(--abyss) 0%,
+      rgba(4, 13, 24, 0.65) 25%,
+      rgba(0, 212, 255, 0.08) 50%,
+      rgba(4, 13, 24, 0.65) 75%,
+      var(--abyss) 100%
+    );
+  }
+  .v4-bg-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 45%, rgba(0,212,255,0.10) 0%, transparent 60%);
+  }
+  .v4-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background-image:
+      linear-gradient(135deg, rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(225deg, rgba(59,130,246,0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: meshDriftV4 30s linear infinite;
+  }
+  @keyframes meshDriftV4 {
+    0%   { background-position: 0 0, 0 0; }
+    100% { background-position: 100px 100px, -100px 100px; }
+  }
+  .v4-ring-accent {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .v4-ring-accent svg {
+    width: min(550px, 75vw);
+    height: auto;
+    opacity: 0.07;
+    animation: ringPulseV4 6s ease-in-out infinite;
+  }
+  @keyframes ringPulseV4 {
+    0%, 100% { opacity: 0.06; }
+    50%      { opacity: 0.12; }
+  }
+
+  /* ============================================================
+     VARIATION 5 — OPTIC GUARDIAN (duotone photo, left-aligned)
+     ============================================================ */
+  .v5-hero {
+    position: relative;
+    background: var(--abyss);
+  }
+  .v5-bg-photo {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image: url('../assets/talosvision-camera-for-hero.png');
+    background-size: cover;
+    background-position: left center;
+    background-repeat: no-repeat;
+    opacity: 0.30;
+    filter: grayscale(100%) brightness(0.85) contrast(1.3);
+  }
+  .v5-bg-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      var(--abyss) 0%,
+      rgba(4, 13, 24, 0.65) 25%,
+      rgba(0, 212, 255, 0.08) 50%,
+      rgba(4, 13, 24, 0.65) 75%,
+      var(--abyss) 100%
+    );
+  }
+  .v5-bg-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 45%, rgba(0,212,255,0.10) 0%, transparent 60%);
+  }
+  .v5-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background-image:
+      linear-gradient(135deg, rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(225deg, rgba(59,130,246,0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: meshDriftV5 30s linear infinite;
+  }
+  @keyframes meshDriftV5 {
+    0%   { background-position: 0 0, 0 0; }
+    100% { background-position: 100px 100px, -100px 100px; }
+  }
+  .v5-ring-accent {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .v5-ring-accent svg {
+    width: min(550px, 75vw);
+    height: auto;
+    opacity: 0.07;
+    animation: ringPulseV5 6s ease-in-out infinite;
+  }
+  @keyframes ringPulseV5 {
+    0%, 100% { opacity: 0.06; }
+    50%      { opacity: 0.12; }
+  }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 480px) {
+    .jump-nav {
+      gap: 0.2rem;
+      padding: 0.25rem;
+    }
+    .jump-nav a {
+      padding: 0.35rem 0.7rem;
+      font-size: 0.65rem;
+    }
+    .proposal-label {
+      font-size: 0.62rem;
+      padding: 0.35rem 0.85rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     JUMP NAVIGATION
+     ============================================================ -->
+<nav class="jump-nav" id="jumpNav" aria-label="Hero variation navigation">
+  <a href="#v1">Circuit Grid</a>
+  <a href="#v2">Watcher's Gaze</a>
+  <a href="#v3">Bronze Sentinel</a>
+  <a href="#v4">Aether Drone</a>
+  <a href="#v5">Optic Guardian</a>
+</nav>
+
+<!-- ============================================================
+     VARIATION 1 — THE CIRCUIT GRID
+     ============================================================ -->
+<section class="hero-base v1-hero" id="v1">
+  <span class="proposal-label">Proposal 01 &mdash; The Circuit Grid</span>
+
+  <!-- Concentric ring SVG -->
+  <div class="v1-ring-accent" aria-hidden="true">
+    <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="250" cy="250" r="220" fill="none" stroke="#00D4FF" stroke-width="1" stroke-dasharray="10 6" opacity="0.5"/>
+      <circle cx="250" cy="250" r="200" fill="none" stroke="#3B82F6" stroke-width="0.6" opacity="0.3"/>
+      <circle cx="250" cy="250" r="180" fill="none" stroke="#00D4FF" stroke-width="0.8" opacity="0.35"/>
+      <circle cx="250" cy="250" r="160" fill="none" stroke="#3B82F6" stroke-width="0.5" opacity="0.2"/>
+      <circle cx="250" cy="30" r="3.5" fill="#00D4FF" opacity="0.7"/>
+      <circle cx="250" cy="470" r="3.5" fill="#00D4FF" opacity="0.7"/>
+      <circle cx="470" cy="250" r="3" fill="#3B82F6" opacity="0.6"/>
+      <circle cx="30" cy="250" r="3" fill="#3B82F6" opacity="0.6"/>
+      <circle cx="405" cy="95" r="2.5" fill="#E8F4FD" opacity="0.45"/>
+      <circle cx="95" cy="405" r="2.5" fill="#E8F4FD" opacity="0.45"/>
+      <circle cx="405" cy="405" r="2.5" fill="#E8F4FD" opacity="0.45"/>
+      <circle cx="95" cy="95" r="2.5" fill="#E8F4FD" opacity="0.45"/>
+      <!-- Circuit traces connecting nodes -->
+      <line x1="250" y1="30" x2="405" y2="95" stroke="#00D4FF" stroke-width="0.4" opacity="0.2"/>
+      <line x1="405" y1="95" x2="470" y2="250" stroke="#3B82F6" stroke-width="0.3" opacity="0.15"/>
+      <line x1="470" y1="250" x2="405" y2="405" stroke="#00D4FF" stroke-width="0.4" opacity="0.2"/>
+      <line x1="405" y1="405" x2="250" y2="470" stroke="#3B82F6" stroke-width="0.3" opacity="0.15"/>
+      <line x1="250" y1="470" x2="95" y2="405" stroke="#00D4FF" stroke-width="0.4" opacity="0.2"/>
+      <line x1="95" y1="405" x2="30" y2="250" stroke="#3B82F6" stroke-width="0.3" opacity="0.15"/>
+      <line x1="30" y1="250" x2="95" y2="95" stroke="#00D4FF" stroke-width="0.4" opacity="0.2"/>
+      <line x1="95" y1="95" x2="250" y2="30" stroke="#3B82F6" stroke-width="0.3" opacity="0.15"/>
+    </svg>
+  </div>
+
+  <!-- Animated circuit nodes -->
+  <div class="v1-nodes" aria-hidden="true">
+    <span class="v1-node"></span>
+    <span class="v1-node"></span>
+    <span class="v1-node"></span>
+    <span class="v1-node"></span>
+    <span class="v1-node"></span>
+    <span class="v1-node"></span>
+    <span class="v1-node"></span>
+    <span class="v1-node"></span>
+  </div>
+
+  <!-- Circuit traces -->
+  <div class="v1-traces" aria-hidden="true">
+    <span class="v1-trace"></span>
+    <span class="v1-trace"></span>
+    <span class="v1-trace"></span>
+    <span class="v1-trace"></span>
+  </div>
+
+  <div class="logo-container">
+    <div class="logo-text-layer">
+      <span class="logo-wordmark">TALOS<span class="logo-vision">VISION</span></span>
+      <span class="logo-underline"></span>
+    </div>
+  </div>
+
+  <div class="hero-divider" aria-hidden="true" style="margin-top:1rem;"></div>
+
+  <p class="hero-tagline" style="margin-top:1.5rem; position:relative; z-index:5;">
+    The <em>Guardian Automaton</em> of Crete &mdash; Reforged for the Age of Vision
+  </p>
+
+  <p class="hero-subtitle" style="position:relative; z-index:5;">
+    An on-premises, zero-cloud machine vision suite that turns everyday hardware into an unblinking sentinel.
+  </p>
+
+  <a href="#suite" class="hero-cta">
+    Explore the Suite
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19"/>
+      <polyline points="19 12 12 19 5 12"/>
+    </svg>
+  </a>
+</section>
+
+<!-- ============================================================
+     VARIATION 2 — THE WATCHER'S GAZE
+     ============================================================ -->
+<section class="hero-base v2-hero" id="v2">
+  <span class="proposal-label">Proposal 02 &mdash; The Watcher's Gaze</span>
+
+  <!-- Ambient glows -->
+  <div class="v2-glow v2-glow--top" aria-hidden="true"></div>
+  <div class="v2-glow v2-glow--center" aria-hidden="true"></div>
+
+  <!-- Floating particles -->
+  <div class="v2-particles" aria-hidden="true">
+    <span class="v2-particle"></span>
+    <span class="v2-particle"></span>
+    <span class="v2-particle"></span>
+    <span class="v2-particle"></span>
+    <span class="v2-particle"></span>
+    <span class="v2-particle"></span>
+    <span class="v2-particle"></span>
+    <span class="v2-particle"></span>
+  </div>
+
+  <!-- Central eye SVG -->
+  <div class="v2-eye-container" aria-hidden="true">
+    <svg viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="v2IrisGlow" cx="50%" cy="50%">
+          <stop offset="0%" stop-color="#00D4FF" stop-opacity="0.8"/>
+          <stop offset="30%" stop-color="#00D4FF" stop-opacity="0.3"/>
+          <stop offset="100%" stop-color="#00D4FF" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="v2PupilGlow" cx="50%" cy="50%">
+          <stop offset="0%" stop-color="#3B82F6" stop-opacity="0.9"/>
+          <stop offset="60%" stop-color="#00D4FF" stop-opacity="0.4"/>
+          <stop offset="100%" stop-color="#00D4FF" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Outer eye shape -->
+      <ellipse cx="250" cy="180" rx="180" ry="120" fill="none" stroke="#00D4FF" stroke-width="1.5" opacity="0.6"/>
+      <ellipse cx="250" cy="180" rx="160" ry="105" fill="none" stroke="#3B82F6" stroke-width="0.8" opacity="0.4"/>
+      <ellipse cx="250" cy="180" rx="140" ry="90" fill="none" stroke="#00D4FF" stroke-width="0.6" opacity="0.3"/>
+
+      <!-- Iris -->
+      <circle cx="250" cy="180" r="55" fill="none" stroke="#00D4FF" stroke-width="2" opacity="0.7"/>
+      <circle cx="250" cy="180" r="45" fill="none" stroke="#3B82F6" stroke-width="1.2" opacity="0.5"/>
+      <circle cx="250" cy="180" r="35" fill="url(#v2IrisGlow)" opacity="0.6"/>
+
+      <!-- Pupil -->
+      <circle cx="250" cy="180" r="18" fill="rgba(0, 212, 255, 0.5)"/>
+      <circle cx="250" cy="180" r="10" fill="rgba(4, 13, 24, 0.8)"/>
+      <circle cx="250" cy="180" r="6" fill="url(#v2PupilGlow)" opacity="0.7"/>
+
+      <!-- Iris radial lines -->
+      <g opacity="0.35" stroke="#00D4FF" stroke-width="0.6">
+        <line x1="250" y1="130" x2="250" y2="150"/>
+        <line x1="250" y1="210" x2="250" y2="230"/>
+        <line x1="200" y1="180" x2="220" y2="180"/>
+        <line x1="280" y1="180" x2="300" y2="180"/>
+        <line x1="215" y1="145" x2="228" y2="158"/>
+        <line x1="285" y1="145" x2="272" y2="158"/>
+        <line x1="215" y1="215" x2="228" y2="202"/>
+        <line x1="285" y1="215" x2="272" y2="202"/>
+      </g>
+
+      <!-- Upper eyelash ticks -->
+      <g opacity="0.3" stroke="#00D4FF" stroke-width="0.8">
+        <line x1="120" y1="85"  x2="115" y2="70"/>
+        <line x1="150" y1="70"  x2="148" y2="55"/>
+        <line x1="190" y1="60"  x2="190" y2="44"/>
+        <line x1="235" y1="56"  x2="237" y2="40"/>
+        <line x1="265" y1="56"  x2="263" y2="40"/>
+        <line x1="310" y1="60"  x2="310" y2="44"/>
+        <line x1="350" y1="70"  x2="352" y2="55"/>
+        <line x1="380" y1="85"  x2="385" y2="70"/>
+      </g>
+
+      <!-- Corner accent dots -->
+      <circle cx="250" cy="30" r="2.5" fill="#E8F4FD" opacity="0.35"/>
+      <circle cx="250" cy="350" r="2.5" fill="#E8F4FD" opacity="0.35"/>
+    </svg>
+  </div>
+
+  <div class="logo-container">
+    <div class="logo-text-layer">
+      <span class="logo-wordmark">TALOS<span class="logo-vision">VISION</span></span>
+      <span class="logo-underline"></span>
+    </div>
+  </div>
+
+  <div class="hero-divider" aria-hidden="true" style="margin-top:1rem;"></div>
+
+  <p class="hero-tagline" style="margin-top:1.5rem; position:relative; z-index:5;">
+    The <em>Unblinking Eye</em> that Never Sleeps
+  </p>
+
+  <p class="hero-subtitle" style="position:relative; z-index:5;">
+    Always on. Always watching. Powered by machine vision, guided by intelligence.
+  </p>
+
+  <a href="#suite" class="hero-cta">
+    Explore the Suite
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19"/>
+      <polyline points="19 12 12 19 5 12"/>
+    </svg>
+  </a>
+</section>
+
+<!-- ============================================================
+     VARIATION 3 — THE BRONZE SENTINEL (duotone photo)
+     ============================================================ -->
+<section class="hero-base v3-hero" id="v3">
+  <span class="proposal-label">Proposal 03 &mdash; The Bronze Sentinel</span>
+
+  <!-- Duotone photo layers -->
+  <div class="v3-bg-photo" aria-hidden="true"></div>
+  <div class="v3-bg-overlay" aria-hidden="true"></div>
+
+  <!-- Subtle ring behind logo -->
+  <div class="v3-ring-accent" aria-hidden="true">
+    <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="250" cy="250" r="200" fill="none" stroke="#00D4FF" stroke-width="0.8" stroke-dasharray="8 6" opacity="0.5"/>
+      <circle cx="250" cy="250" r="185" fill="none" stroke="#3B82F6" stroke-width="0.5" opacity="0.3"/>
+      <circle cx="250" cy="250" r="170" fill="none" stroke="#00D4FF" stroke-width="0.6" opacity="0.25"/>
+      <circle cx="250" cy="50" r="2.5" fill="#00D4FF" opacity="0.6"/>
+      <circle cx="250" cy="450" r="2.5" fill="#00D4FF" opacity="0.6"/>
+      <circle cx="450" cy="250" r="2" fill="#3B82F6" opacity="0.5"/>
+      <circle cx="50" cy="250" r="2" fill="#3B82F6" opacity="0.5"/>
+      <circle cx="391" cy="109" r="1.8" fill="#E8F4FD" opacity="0.35"/>
+      <circle cx="109" cy="391" r="1.8" fill="#E8F4FD" opacity="0.35"/>
+      <circle cx="391" cy="391" r="1.8" fill="#E8F4FD" opacity="0.35"/>
+      <circle cx="109" cy="109" r="1.8" fill="#E8F4FD" opacity="0.35"/>
+    </svg>
+  </div>
+
+  <div class="logo-container">
+    <div class="logo-text-layer">
+      <span class="logo-wordmark">TALOS<span class="logo-vision">VISION</span></span>
+      <span class="logo-underline"></span>
+    </div>
+  </div>
+
+  <div class="hero-divider" aria-hidden="true" style="margin-top:1rem;"></div>
+
+  <a href="#suite" class="hero-cta">
+    Explore the Suite
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19"/>
+      <polyline points="19 12 12 19 5 12"/>
+    </svg>
+  </a>
+</section>
+
+<!-- ============================================================
+     VARIATION 4 — AETHER DRONE (duotone photo)
+     ============================================================ -->
+<section class="hero-base v4-hero" id="v4">
+  <span class="proposal-label">Proposal 04 &mdash; Aether Drone</span>
+
+  <!-- Duotone photo layers -->
+  <div class="v4-bg-photo" aria-hidden="true"></div>
+  <div class="v4-bg-overlay" aria-hidden="true"></div>
+
+  <!-- Subtle ring behind logo -->
+  <div class="v4-ring-accent" aria-hidden="true">
+    <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="250" cy="250" r="200" fill="none" stroke="#00D4FF" stroke-width="0.8" stroke-dasharray="8 6" opacity="0.5"/>
+      <circle cx="250" cy="250" r="185" fill="none" stroke="#3B82F6" stroke-width="0.5" opacity="0.3"/>
+      <circle cx="250" cy="250" r="170" fill="none" stroke="#00D4FF" stroke-width="0.6" opacity="0.25"/>
+      <circle cx="250" cy="50" r="2.5" fill="#00D4FF" opacity="0.6"/>
+      <circle cx="250" cy="450" r="2.5" fill="#00D4FF" opacity="0.6"/>
+      <circle cx="450" cy="250" r="2" fill="#3B82F6" opacity="0.5"/>
+      <circle cx="50" cy="250" r="2" fill="#3B82F6" opacity="0.5"/>
+      <circle cx="391" cy="109" r="1.8" fill="#E8F4FD" opacity="0.35"/>
+      <circle cx="109" cy="391" r="1.8" fill="#E8F4FD" opacity="0.35"/>
+      <circle cx="391" cy="391" r="1.8" fill="#E8F4FD" opacity="0.35"/>
+      <circle cx="109" cy="109" r="1.8" fill="#E8F4FD" opacity="0.35"/>
+    </svg>
+  </div>
+
+  <div class="logo-container">
+    <div class="logo-text-layer">
+      <span class="logo-wordmark">TALOS<span class="logo-vision">VISION</span></span>
+      <span class="logo-underline"></span>
+    </div>
+  </div>
+
+  <div class="hero-divider" aria-hidden="true" style="margin-top:1rem;"></div>
+
+  <a href="#suite" class="hero-cta">
+    Explore the Suite
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19"/>
+      <polyline points="19 12 12 19 5 12"/>
+    </svg>
+  </a>
+</section>
+
+<!-- ============================================================
+     VARIATION 5 — OPTIC GUARDIAN (duotone photo, left-aligned)
+     ============================================================ -->
+<section class="hero-base v5-hero" id="v5">
+  <span class="proposal-label">Proposal 05 &mdash; Optic Guardian</span>
+
+  <!-- Duotone photo layers -->
+  <div class="v5-bg-photo" aria-hidden="true"></div>
+  <div class="v5-bg-overlay" aria-hidden="true"></div>
+
+  <!-- Subtle ring behind logo -->
+  <div class="v5-ring-accent" aria-hidden="true">
+    <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="250" cy="250" r="200" fill="none" stroke="#00D4FF" stroke-width="0.8" stroke-dasharray="8 6" opacity="0.5"/>
+      <circle cx="250" cy="250" r="185" fill="none" stroke="#3B82F6" stroke-width="0.5" opacity="0.3"/>
+      <circle cx="250" cy="250" r="170" fill="none" stroke="#00D4FF" stroke-width="0.6" opacity="0.25"/>
+      <circle cx="250" cy="50" r="2.5" fill="#00D4FF" opacity="0.6"/>
+      <circle cx="250" cy="450" r="2.5" fill="#00D4FF" opacity="0.6"/>
+      <circle cx="450" cy="250" r="2" fill="#3B82F6" opacity="0.5"/>
+      <circle cx="50" cy="250" r="2" fill="#3B82F6" opacity="0.5"/>
+      <circle cx="391" cy="109" r="1.8" fill="#E8F4FD" opacity="0.35"/>
+      <circle cx="109" cy="391" r="1.8" fill="#E8F4FD" opacity="0.35"/>
+      <circle cx="391" cy="391" r="1.8" fill="#E8F4FD" opacity="0.35"/>
+      <circle cx="109" cy="109" r="1.8" fill="#E8F4FD" opacity="0.35"/>
+    </svg>
+  </div>
+
+  <div class="logo-container">
+    <div class="logo-text-layer">
+      <span class="logo-wordmark">TALOS<span class="logo-vision">VISION</span></span>
+      <span class="logo-underline"></span>
+    </div>
+  </div>
+
+  <div class="hero-divider" aria-hidden="true" style="margin-top:1rem;"></div>
+
+  <a href="#suite" class="hero-cta">
+    Explore the Suite
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19"/>
+      <polyline points="19 12 12 19 5 12"/>
+    </svg>
+  </a>
+</section>
+
+<!-- ============================================================
+     SCRIPTS
+     ============================================================ -->
+<script>
+(function() {
+  /* ---- Jump nav active state on scroll ---- */
+  var sections = document.querySelectorAll('.hero-base');
+  var navLinks = document.querySelectorAll('.jump-nav a');
+  var ticking = false;
+
+  function updateActiveNav() {
+    var current = '';
+    sections.forEach(function(section) {
+      var rect = section.getBoundingClientRect();
+      if (rect.top <= window.innerHeight * 0.5) {
+        current = section.getAttribute('id');
+      }
+    });
+    navLinks.forEach(function(link) {
+      var href = link.getAttribute('href').replace('#', '');
+      link.classList.toggle('active', href === current);
+    });
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', function() {
+    if (!ticking) {
+      requestAnimationFrame(updateActiveNav);
+      ticking = true;
+    }
+  }, { passive: true });
+
+  /* ---- Smooth scroll for jump nav ---- */
+  navLinks.forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      var target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  updateActiveNav();
+})();
+</script>
+
+</body>
+</html>

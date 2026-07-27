@@ -152,3 +152,22 @@ A stadium bowl abstracted as a cyan dot-cloud — thousands of tiny luminous poi
 - Render style: photorealistic data-visualisation and HUD overlays; dark cyber-tech aesthetic
 - Composition: tight crop, no identifiable people, no full architectural environments — subject is always the abstracted security/vision data layer
 - For each vertical: the image should feel like a single-frame capture of the TalosVision intelligence layer specific to that sector — as if the platform's monitoring interface were rendered directly onto the sector's conceptual space
+
+---
+
+## Hero Background — Machine Vision Mechanical
+
+> A hero-section background image for the TalosVision homepage. Designed to work as a subtle, low-opacity duotone layer behind the logo and typography — grayscaled, darkened, and overlaid with an abyss-to-cyan gradient. The composition focuses on the mechanical/optical essence of machine vision: no humans, no faces, no environments — just the hardware of sight itself.
+
+```
+A close-up macro composition of machine-vision optical hardware on a deep-black abyss void. A large precision camera lens dominates the frame — multi-element glass with cyan anti-reflective coatings catching rim light across concentric lens rings. Fine circuit traces spider outward from the lens barrel, transitioning into abstract data pathways — delicate cyan and azure lines etched against the darkness. An iris aperture mechanism sits partially open, its overlapping blades catching metallic edge highlights. Scattered sensor-dot arrays (like LIDAR or infrared emitters) form faint geometric constellations in the periphery. A subtle laser-grid plane intersects the lower third at a shallow angle, creating a faint cyan crosshatch. The composition is weighted slightly to the left with the lens as the anchor, leaving negative space on the right for typography to sit uncluttered. No humans, no faces, no body parts, no environments, no text in the image. Render style: photorealistic macro photography with cyber-industrial precision. Lighting: single key light source from upper-left at 45 degrees, rim-lighting the glass and metal elements; no ambient fill. Color palette: near-monochromatic — deep abyss black (#040D18), cyan (#00D4FF) and azure (#3B82F6) accents exclusively on the optical coatings, circuit traces, and laser grid. The image should feel cold, precise, sentinel-like — the eye of a machine waiting in the dark.
+```
+
+**Style notes for hero background prompt:**
+- Aspect ratio: 16:9 or 21:9 (hero-banner landscape)
+- Color space: deep navy/abyss background (#040D18), cyan (#00D4FF) and azure (#3B82F6) accents exclusively; no other colors
+- Lighting: low-key, single directional rim light, no ambient fill — the subject emerges from pure darkness
+- Render style: photorealistic macro, cyber-industrial precision, cold and sentinel-like
+- Composition: left-weighted anchor element (lens) with intentional negative space on the right for text overlay
+- Intended use: grayscaled, brightness-reduced (~0.85), low opacity (~0.30) background layer with a CSS duotone gradient overlay (--abyss to --cyan at low alpha) — the image should work as atmospheric texture behind the TALOSVISION wordmark
+- No humans, no faces, no silhouettes, no environments, no text

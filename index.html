@@ -53,24 +53,48 @@
   @media (min-width: 1024px) { .nav-links { display: flex; } }
 
   /* ============================================================
-     SECTION 1 — HERO
+     SECTION 1 — HERO (duotone photo background)
      ============================================================ */
-  .hero { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: linear-gradient(180deg, #020810 0%, var(--abyss) 40%, var(--electric) 100%); position: relative; overflow: hidden; padding: clamp(4rem, 10vh, 8rem) clamp(0.5rem, 3vw, 1.5rem); }
-  .hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(135deg, rgba(0, 212, 255, 0.04) 1px, transparent 1px), linear-gradient(225deg, rgba(0, 212, 255, 0.04) 1px, transparent 1px); background-size: 40px 40px; animation: meshDrift 25s linear infinite; z-index: 1; pointer-events: none; }
-  @keyframes meshDrift { 0% { background-position: 0 0, 0 0; } 100% { background-position: 80px 80px, -80px 80px; } }
-  .hero::after { content: ''; position: absolute; width: 800px; height: 800px; border-radius: 50%; background: radial-gradient(circle, rgba(0, 212, 255, 0.10) 0%, transparent 65%); top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 0; animation: orbPulse 6s ease-in-out infinite; }
-  @keyframes orbPulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.6; } }
+  .hero { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; position: relative; overflow: hidden; padding: clamp(4rem, 10vh, 8rem) clamp(0.5rem, 3vw, 1.5rem); background: var(--abyss); }
+
+  /* Duotone photo layer */
+  .hero-bg-photo {
+    position: absolute; inset: 0; z-index: 0;
+    background-image: url('assets/talosvision-camera-for-hero.png');
+    background-size: cover; background-position: left center; background-repeat: no-repeat;
+    opacity: 0.30;
+    filter: grayscale(100%) brightness(0.85) contrast(1.3);
+  }
+
+  /* Duotone overlay */
+  .hero-bg-overlay {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: linear-gradient(180deg, var(--abyss) 0%, rgba(4, 13, 24, 0.65) 25%, rgba(0, 212, 255, 0.08) 50%, rgba(4, 13, 24, 0.65) 75%, var(--abyss) 100%);
+  }
+  .hero-bg-overlay::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 45%, rgba(0,212,255,0.10) 0%, transparent 60%);
+  }
+
+  /* Diagonal mesh over photo */
+  .hero::before {
+    content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    background-image: linear-gradient(135deg, rgba(0,212,255,0.03) 1px, transparent 1px), linear-gradient(225deg, rgba(59,130,246,0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: meshDrift 30s linear infinite;
+  }
+  @keyframes meshDrift { 0% { background-position: 0 0, 0 0; } 100% { background-position: 100px 100px, -100px 100px; } }
 
   /* Hero concentric ring accent */
   .hero-ring-accent {
     position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    z-index: 0; pointer-events: none;
+    z-index: 1; pointer-events: none;
   }
   .hero-ring-accent svg {
-    width: min(600px, 85vw); height: auto; opacity: 0.10;
-    animation: ringPulse 5s ease-in-out infinite;
+    width: min(550px, 75vw); height: auto; opacity: 0.07;
+    animation: ringPulse 6s ease-in-out infinite;
   }
-  @keyframes ringPulse { 0%, 100% { opacity: 0.08; } 50% { opacity: 0.16; } }
+  @keyframes ringPulse { 0%, 100% { opacity: 0.06; } 50% { opacity: 0.12; } }
 
   .logo-container { width: 100%; max-width: 860px; margin: 0 auto; position: relative; z-index: 10; }
   .logo-container svg { width: 100%; height: auto; display: block; }
@@ -422,71 +446,40 @@
      ============================================================ -->
 <section class="hero" id="hero">
 
+  <!-- Duotone photo layers -->
+  <div class="hero-bg-photo" aria-hidden="true"></div>
+  <div class="hero-bg-overlay" aria-hidden="true"></div>
+
   <!-- Concentric ring accent behind hero -->
   <div class="hero-ring-accent" aria-hidden="true">
-    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="200" cy="200" r="170" fill="none" stroke="#00D4FF" stroke-width="1" stroke-dasharray="8 4" opacity="0.5"/>
-      <circle cx="200" cy="200" r="150" fill="none" stroke="#3B82F6" stroke-width="0.6" opacity="0.3"/>
-      <circle cx="200" cy="200" r="130" fill="none" stroke="#00D4FF" stroke-width="0.8" opacity="0.35"/>
-      <circle cx="200" cy="25" r="3" fill="#00D4FF" opacity="0.6"/>
-      <circle cx="200" cy="375" r="3" fill="#00D4FF" opacity="0.6"/>
-      <circle cx="375" cy="200" r="2.5" fill="#3B82F6" opacity="0.5"/>
-      <circle cx="25" cy="200" r="2.5" fill="#3B82F6" opacity="0.5"/>
-      <circle cx="322" cy="78" r="2" fill="#E8F4FD" opacity="0.4"/>
-      <circle cx="78" cy="322" r="2" fill="#E8F4FD" opacity="0.4"/>
-      <circle cx="322" cy="322" r="2" fill="#E8F4FD" opacity="0.4"/>
-      <circle cx="78" cy="78" r="2" fill="#E8F4FD" opacity="0.4"/>
+    <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="250" cy="250" r="200" fill="none" stroke="#00D4FF" stroke-width="0.8" stroke-dasharray="8 6" opacity="0.5"/>
+      <circle cx="250" cy="250" r="185" fill="none" stroke="#3B82F6" stroke-width="0.5" opacity="0.3"/>
+      <circle cx="250" cy="250" r="170" fill="none" stroke="#00D4FF" stroke-width="0.6" opacity="0.25"/>
+      <circle cx="250" cy="50" r="2.5" fill="#00D4FF" opacity="0.6"/>
+      <circle cx="250" cy="450" r="2.5" fill="#00D4FF" opacity="0.6"/>
+      <circle cx="450" cy="250" r="2" fill="#3B82F6" opacity="0.5"/>
+      <circle cx="50" cy="250" r="2" fill="#3B82F6" opacity="0.5"/>
+      <circle cx="391" cy="109" r="1.8" fill="#E8F4FD" opacity="0.35"/>
+      <circle cx="109" cy="391" r="1.8" fill="#E8F4FD" opacity="0.35"/>
+      <circle cx="391" cy="391" r="1.8" fill="#E8F4FD" opacity="0.35"/>
+      <circle cx="109" cy="109" r="1.8" fill="#E8F4FD" opacity="0.35"/>
     </svg>
   </div>
 
-    <!-- SVG Logo: Background decorations (absolute layer) -->
-    <div class="logo-container reveal">
-      <div class="logo-bg-deco" aria-hidden="true">
-        <svg viewBox="0 0 860 320" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="ringGradBG" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#00D4FF"/>
-              <stop offset="25%" stop-color="#3B82F6"/>
-              <stop offset="50%" stop-color="#00D4FF"/>
-              <stop offset="75%" stop-color="#3B82F6"/>
-              <stop offset="100%" stop-color="#00D4FF"/>
-            </linearGradient>
-            <radialGradient id="cyanGlowBG" cx="50%" cy="50%">
-              <stop offset="0%" stop-color="#00D4FF" stop-opacity="0.10"/>
-              <stop offset="100%" stop-color="#00D4FF" stop-opacity="0"/>
-            </radialGradient>
-          </defs>
-          <ellipse cx="430" cy="140" rx="280" ry="120" fill="url(#cyanGlowBG)"/>
-          <circle cx="430" cy="135" r="140" fill="none" stroke="url(#ringGradBG)" stroke-width="1.2" stroke-dasharray="8 4" opacity="0.5"/>
-          <circle cx="430" cy="135" r="130" fill="none" stroke="url(#ringGradBG)" stroke-width="0.6" opacity="0.3"/>
-          <circle cx="430" cy="135" r="150" fill="none" stroke="url(#ringGradBG)" stroke-width="0.4" opacity="0.15"/>
-          <circle cx="430" cy="5" r="3" fill="#00D4FF" opacity="0.7"/>
-          <circle cx="560" cy="75" r="2.5" fill="#3B82F6" opacity="0.6"/>
-          <circle cx="560" cy="195" r="2.5" fill="#3B82F6" opacity="0.6"/>
-          <circle cx="430" cy="275" r="3" fill="#00D4FF" opacity="0.7"/>
-          <circle cx="300" cy="195" r="2.5" fill="#3B82F6" opacity="0.6"/>
-          <circle cx="300" cy="75" r="2.5" fill="#3B82F6" opacity="0.6"/>
-          <circle cx="530" cy="25" r="1.8" fill="#E8F4FD" opacity="0.5"/>
-          <circle cx="580" cy="135" r="1.8" fill="#E8F4FD" opacity="0.5"/>
-          <circle cx="280" cy="135" r="1.8" fill="#E8F4FD" opacity="0.5"/>
-          <circle cx="330" cy="10" r="1.8" fill="#E8F4FD" opacity="0.5"/>
-          <line x1="430" y1="8" x2="430" y2="2" stroke="#00D4FF" stroke-width="0.5" opacity="0.3"/>
-          <line x1="560" y1="77.5" x2="558" y2="73" stroke="#3B82F6" stroke-width="0.5" opacity="0.25"/>
-          <line x1="430" y1="272" x2="430" y2="278" stroke="#00D4FF" stroke-width="0.5" opacity="0.3"/>
-        </svg>
-      </div>
-      <div class="logo-text-layer">
-        <span class="logo-wordmark">TALOS<span class="logo-vision">VISION</span></span>
-        <span class="logo-underline"></span>
-      </div>
+  <div class="logo-container reveal">
+    <div class="logo-text-layer">
+      <span class="logo-wordmark">TALOS<span class="logo-vision">VISION</span></span>
+      <span class="logo-underline"></span>
     </div>
+  </div>
 
-    <div class="hero-divider reveal" aria-hidden="true"></div>
+  <div class="hero-divider reveal" aria-hidden="true"></div>
 
-    <a href="#suite" class="hero-cta reveal">
-      Explore the Suite
-      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
-    </a>
+  <a href="#suite" class="hero-cta reveal">
+    Explore the Suite
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+  </a>
 </section>
 
 <!-- ============================================================
