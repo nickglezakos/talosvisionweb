@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TalosVision — Next-Generation Machine Vision Suite</title>
+<style>
+  :root {
+    --abyss: #040D18;
+    --deep-navy: #0A1628;
+    --midnight: #0F2142;
+    --electric: #0C1E3D;
+    --volt: #142C54;
+    --cyan: #00D4FF;
+    --azure: #3B82F6;
+    --ice: #E8F4FD;
+    --white: #FFFFFF;
+    --steel-text: #8899AA;
+    --font-display: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-body: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { font-family: var(--font-body); background: var(--abyss); color: var(--white); line-height: 1.6; overflow-x: hidden; }
+  h1 { font-size: clamp(2.4rem, 6vw, 7rem); font-weight: 800; letter-spacing: -0.02em; line-height: 1.0; }
+  h2 { font-size: clamp(1.8rem, 4vw, 3.5rem); font-weight: 700; letter-spacing: -0.01em; line-height: 1.1; }
+  h3 { font-size: clamp(1.3rem, 2.5vw, 2.2rem); font-weight: 600; line-height: 1.2; }
+  h4 { font-size: clamp(1.1rem, 2vw, 1.5rem); font-weight: 600; line-height: 1.3; }
+  p  { color: var(--steel-text); font-size: 1rem; line-height: 1.7; }
+  a { color: var(--cyan); text-decoration: none; transition: color 0.2s; }
+  a:hover, a:focus-visible { color: var(--azure); }
+  .container { width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 clamp(1rem, 5vw, 3rem); position: relative; z-index: 1; }
+  .section { padding: clamp(4rem, 10vw, 8rem) 0; position: relative; overflow: hidden; }
+  .section-label { display: inline-block; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1rem; }
+  .accent-line { width: clamp(40px, 8vw, 80px); height: 3px; background: var(--cyan); margin-bottom: 2rem; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+  /* Animated geometric background */
+  .geo-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.10; }
+
+  /* Section background geometry accents */
+  .geo-accent { position: absolute; pointer-events: none; z-index: 0; opacity: 0.12; }
+  .geo-accent svg { width: 100%; height: 100%; }
+
+  /* Navigation */
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.25rem clamp(1rem, 5vw, 3rem); background: transparent; transition: background 0.35s, backdrop-filter 0.35s; display: flex; justify-content: space-between; align-items: center; }
+  .nav.scrolled { background: rgba(4, 13, 24, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(0, 212, 255, 0.06); }
+  .nav-logo { font-weight: 800; font-size: 1.25rem; letter-spacing: -0.01em; color: var(--white); }
+  .nav-logo span { color: var(--cyan); }
+  .nav-links { display: none; list-style: none; gap: 1.75rem; }
+  .nav-links a { color: var(--steel-text); font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--white); }
+  @media (min-width: 1024px) { .nav-links { display: flex; } }
+
+  /* ============================================================
+     SECTION 1 — HERO
+     ============================================================ */
+  .hero { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: linear-gradient(180deg, #020810 0%, var(--abyss) 40%, var(--electric) 100%); position: relative; overflow: hidden; padding: clamp(4rem, 10vh, 8rem) clamp(0.5rem, 3vw, 1.5rem); }
+  .hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(135deg, rgba(0, 212, 255, 0.04) 1px, transparent 1px), linear-gradient(225deg, rgba(0, 212, 255, 0.04) 1px, transparent 1px); background-size: 40px 40px; animation: meshDrift 25s linear infinite; z-index: 1; pointer-events: none; }
+  @keyframes meshDrift { 0% { background-position: 0 0, 0 0; } 100% { background-position: 80px 80px, -80px 80px; } }
+  .hero::after { content: ''; position: absolute; width: 800px; height: 800px; border-radius: 50%; background: radial-gradient(circle, rgba(0, 212, 255, 0.10) 0%, transparent 65%); top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 0; animation: orbPulse 6s ease-in-out infinite; }
+  @keyframes orbPulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.6; } }
+
+  /* Hero concentric ring accent */
+  .hero-ring-accent {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    z-index: 0; pointer-events: none;
+  }
+  .hero-ring-accent svg {
+    width: min(600px, 85vw); height: auto; opacity: 0.10;
+    animation: ringPulse 5s ease-in-out infinite;
+  }
+  @keyframes ringPulse { 0%, 100% { opacity: 0.08; } 50% { opacity: 0.16; } }
+
+  .logo-container { width: 100%; max-width: 860px; margin: 0 auto; position: relative; z-index: 10; }
+  .logo-container svg { width: 100%; height: auto; display: block; }
+  .logo-bg-deco {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .logo-bg-deco svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .logo-text-layer {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .logo-wordmark {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--ice);
+    line-height: 0.9;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .logo-wordmark .logo-vision {
+    background: linear-gradient(90deg, var(--cyan), var(--azure), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .logo-underline {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, rgba(0,212,255,0.3) 10%, var(--cyan) 30%, var(--azure) 50%, var(--cyan) 70%, rgba(0,212,255,0.3) 90%, transparent 100%);
+  }
+
+  .hero-tagline { font-size: clamp(1rem, 2.5vw, 1.35rem); color: var(--cyan); font-weight: 600; letter-spacing: 0.04em; max-width: 600px; }
+  .hero-tagline em { font-style: italic; color: var(--azure); }
+
+  .hero-subtitle { font-size: clamp(0.85rem, 1.8vw, 1.05rem); color: var(--steel-text); max-width: 540px; }
+
+  .hero-divider {
+    width: 100%; max-width: 300px; height: 2px;
+    background: linear-gradient(90deg, transparent 0%, rgba(0,212,255,0.3) 15%, var(--cyan) 30%, var(--azure) 50%, var(--cyan) 70%, rgba(0,212,255,0.3) 85%, transparent 100%);
+    position: relative;
+  }
+  .hero-divider::before, .hero-divider::after {
+    content: ''; position: absolute; top: -4px;
+    width: 10px; height: 10px;
+    border: 1.5px solid var(--cyan); border-radius: 50%; background: var(--abyss);
+  }
+  .hero-divider::before { left: calc(50% - 30px); }
+  .hero-divider::after  { right: calc(50% - 30px); }
+
+  .hero-cta {
+    position: relative;
+    z-index: 5;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    margin-top: clamp(1rem, 3vh, 2.5rem);
+    padding: 0.9rem 2rem;
+    background: transparent;
+    border: 2px solid var(--cyan);
+    color: var(--cyan);
+    font-size: 0.95rem; font-weight: 700;
+    font-family: var(--font-body);
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .hero-cta:hover, .hero-cta:focus-visible { background: var(--cyan); color: var(--abyss); }
+  .hero-cta svg { flex-shrink: 0; }
+
+  /* ============================================================
+     MYTH PANEL
+     ============================================================ */
+  .myth-section { background: var(--abyss); }
+  .myth-panel {
+    max-width: 720px; margin: 0 auto;
+    padding: 2.5rem clamp(1.5rem, 5vw, 3rem);
+    background: rgba(0, 212, 255, 0.02);
+    border: 1px solid rgba(0, 212, 255, 0.08);
+    text-align: left;
+  }
+  .myth-panel h3 {
+    font-size: 1.1rem; font-weight: 700; color: var(--cyan);
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .myth-panel h3 svg { width: 24px; height: 24px; flex-shrink: 0; }
+  .myth-panel p { font-size: 0.9rem; color: var(--steel-text); line-height: 1.8; margin-bottom: 1rem; }
+  .myth-panel p:last-child { margin-bottom: 0; }
+  .myth-panel .connection { color: var(--cyan); font-weight: 600; }
+
+  /* ============================================================
+     SECTION 2 — PLATFORM OVERVIEW
+     ============================================================ */
+  .platform { background: var(--electric); }
+  .platform-header { margin-bottom: clamp(2.5rem, 6vw, 4rem); }
+  .capability-grid { display: grid; grid-template-columns: 1fr; gap: 1px; background: rgba(0, 212, 255, 0.06); border: 1px solid rgba(0, 212, 255, 0.06); position: relative; z-index: 1; }
+  @media (min-width: 640px) { .capability-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1024px) { .capability-grid { grid-template-columns: 1fr 1fr 1fr; } }
+  .cap-card { background: var(--midnight); padding: clamp(1.5rem, 4vw, 2.5rem); display: flex; flex-direction: column; gap: 0.75rem; transition: background 0.3s; position: relative; z-index: 1; }
+  .cap-card:hover { background: var(--steel); }
+  .cap-icon { margin-bottom: 0.25rem; color: var(--cyan); display: flex; }
+  .cap-icon svg { width: 28px; height: 28px; }
+  .cap-card h4 { color: var(--white); font-size: 1.05rem; }
+  .cap-card p  { font-size: 0.9rem; }
+  .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: clamp(3rem, 8vw, 5rem); text-align: center; position: relative; z-index: 1; }
+  @media (min-width: 640px) { .stats-row { grid-template-columns: repeat(4, 1fr); } }
+  .stat-item { padding: 2rem 1rem; border: 1px solid rgba(0, 212, 255, 0.1); background: rgba(0, 212, 255, 0.02); }
+  .stat-value { display: block; font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; color: var(--cyan); line-height: 1; margin-bottom: 0.4rem; }
+  .stat-label { font-size: 0.8rem; color: var(--steel-text); font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; }
+
+  /* Pulse waveform accent in stats */
+  .stats-accent {
+    position: absolute; top: -60px; left: 0; right: 0;
+    display: flex; justify-content: center; z-index: 0; pointer-events: none;
+  }
+  .stats-accent svg { width: min(500px, 80vw); height: 100px; opacity: 0.12; }
+
+  /* ============================================================
+     SECTION 3 — APPLICATION SUITE
+     ============================================================ */
+  .suite { background: var(--volt); }
+  .suite-header { margin-bottom: clamp(2.5rem, 6vw, 4rem); }
+
+  .grid-e { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+
+  .card-e {
+    background: var(--midnight);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+    position: relative;
+  }
+  @media (min-width: 560px) { .card-e { flex-direction: row; } }
+  .card-e:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,212,255,0.06); }
+  .card-e .card-e-img {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+  }
+  @media (min-width: 560px) {
+    .card-e .card-e-img { width: 45%; height: auto; min-height: 420px; }
+  }
+  .card-e .card-e-body {
+    flex: 1;
+    padding: 2.5rem;
+    display: flex; flex-direction: column; gap: 1.25rem;
+    justify-content: center;
+    border-left: 1px solid rgba(0,212,255,0.06);
+  }
+  .card-e:nth-child(even) .card-e-body { border-left-color: rgba(59,130,246,0.12); }
+  .card-e h3 { color: var(--white); }
+  .product-brand { color: var(--steel-text); font-weight: 400; }
+  .card-e .product-number { font-size: 0.6rem; }
+  .card-e .card-e-desc { color: var(--steel-text); font-size: 0.85rem; line-height: 1.6; max-width: 48rem; }
+  .card-e .badge-strip { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .badge { display: inline-block; padding: 0.35rem 0.75rem; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.03em; border: 1px solid rgba(0, 212, 255, 0.2); color: var(--ice); background: rgba(0, 212, 255, 0.05); white-space: nowrap; }
+  .product-function {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    z-index: 2;
+    padding: 0.35rem 0.85rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--abyss);
+    background: var(--cyan);
+    border-radius: 100px;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .product-modes { font-size: 0.72rem; color: var(--steel-text); letter-spacing: 0.04em; font-weight: 600; }
+  .product-number { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; color: var(--cyan); text-transform: uppercase; }
+
+  /* ============================================================
+     SECTION 4 — OPERATING MODES
+     ============================================================ */
+  .modes { background: var(--abyss); position: relative; }
+  .modes::before { content: ''; position: absolute; top: -2px; left: 0; right: 0; height: 50px; background: var(--volt); clip-path: polygon(0 0, 100% 0, 100% 20%, 0 100%); z-index: 1; }
+  .modes-header { margin-bottom: clamp(2.5rem, 6vw, 4rem); }
+  .mode-grid { display: grid; grid-template-columns: 1fr; gap: 1px; background: rgba(0, 212, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.06); position: relative; z-index: 1; }
+  @media (min-width: 640px)  { .mode-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1024px) { .mode-grid { grid-template-columns: repeat(5, 1fr); } }
+  .mode-card { background: rgba(10, 22, 40, 0.6); padding: clamp(1.5rem, 4vw, 2.5rem); text-align: center; transition: background 0.3s; position: relative; z-index: 1; }
+  .mode-card:hover { background: var(--steel); }
+  .mode-icon { margin-bottom: 1rem; display: flex; justify-content: center; color: var(--cyan); }
+  .mode-icon svg { width: 36px; height: 36px; }
+  .mode-card h4 { color: var(--white); margin-bottom: 0.5rem; font-size: 1rem; }
+  .mode-card p  { font-size: 0.82rem; }
+
+  /* ============================================================
+     SECTION 5 — SUPPORTING CAPABILITIES
+     ============================================================ */
+  .capabilities { background: var(--electric); }
+  .capabilities-header { margin-bottom: clamp(2.5rem, 6vw, 4rem); }
+  .cap-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; position: relative; z-index: 1; }
+  @media (min-width: 640px)  { .cap-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1024px) { .cap-grid { grid-template-columns: repeat(4, 1fr); } }
+  .cap-feature-card { padding: clamp(1.5rem, 3vw, 2rem); background: var(--midnight); border-top: 2px solid var(--cyan); transition: transform 0.3s, border-color 0.3s; position: relative; z-index: 1; }
+  .cap-feature-card:hover { transform: translateY(-4px); border-top-color: var(--azure); }
+  .cap-feature-icon { margin-bottom: 0.75rem; display: flex; color: var(--cyan); }
+  .cap-feature-icon svg { width: 28px; height: 28px; }
+  .cap-feature-card h4 { color: var(--white); margin-bottom: 0.5rem; font-size: 1rem; }
+  .cap-feature-card p  { font-size: 0.85rem; }
+
+  /* ============================================================
+     SECTION 6 — TARGET VERTICALS
+     ============================================================ */
+  .verticals { background: var(--abyss); position: relative; }
+  .verticals::before { content: ''; position: absolute; top: -2px; left: 0; right: 0; height: 50px; background: var(--electric); clip-path: polygon(0 100%, 100% 20%, 100% 0, 0 0); z-index: 1; }
+  .verticals-header { margin-bottom: clamp(2.5rem, 6vw, 4rem); }
+  .vertical-scroll { display: flex; flex-direction: column; gap: 1.25rem; position: relative; z-index: 1; }
+  .vert-card { display: flex; flex-direction: column; background: rgba(10, 22, 40, 0.7); border: 1px solid rgba(0, 212, 255, 0.08); overflow: hidden; transition: border-color 0.3s, background 0.3s, transform 0.3s, box-shadow 0.3s; }
+  .vert-card:hover { border-color: rgba(0, 212, 255, 0.25); background: rgba(15, 33, 66, 0.9); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,212,255,0.06); }
+  @media (min-width: 768px) { .vert-card { flex-direction: row; } }
+  .vert-card .vert-card-img { flex: 0 0 auto; width: 100%; height: 220px; background-size: cover; background-position: center; position: relative; }
+  .vert-card .vert-card-img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 60%, rgba(4,13,24,0.85) 100%); opacity: 0; transition: opacity 0.3s; }
+  .vert-card:hover .vert-card-img::after { opacity: 1; }
+  @media (min-width: 768px) {
+    .vert-card .vert-card-img { width: 48%; height: auto; min-height: 280px; }
+    .vert-card .vert-card-img::after { background: linear-gradient(90deg, transparent 60%, rgba(4,13,24,0.85) 100%); }
+  }
+  .vert-card .vert-card-body { flex: 1; padding: clamp(1.5rem, 4vw, 2.25rem); display: flex; flex-direction: column; gap: 0.75rem; justify-content: center; border-top: 1px solid rgba(0,212,255,0.06); }
+  @media (min-width: 768px) { .vert-card .vert-card-body { border-top: none; border-left: 1px solid rgba(0,212,255,0.06); } }
+  .vert-card:nth-child(even) .vert-card-body { border-left-color: rgba(59,130,246,0.12); }
+  /* Alternating rows: even cards flip image to the right on desktop */
+  @media (min-width: 768px) {
+    .vert-card:nth-child(even) { flex-direction: row-reverse; }
+    .vert-card:nth-child(even) .vert-card-body { border-left: none; border-right: 1px solid rgba(59,130,246,0.12); }
+    .vert-card:nth-child(even) .vert-card-img::after { background: linear-gradient(270deg, transparent 60%, rgba(4,13,24,0.85) 100%); }
+  }
+  .vert-card h4 { color: var(--white); font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .vert-card h4 .vert-icon { width: 22px; height: 22px; flex-shrink: 0; color: var(--cyan); display: flex; align-items: center; }
+  .vert-card .vert-desc { color: var(--steel-text); font-size: 0.85rem; line-height: 1.6; }
+  .vert-card .vert-apps { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.25rem; }
+  .vert-card .vert-app-tag { display: inline-block; padding: 0.3rem 0.65rem; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em; border: 1px solid rgba(0, 212, 255, 0.18); color: var(--cyan); background: rgba(0, 212, 255, 0.05); white-space: nowrap; }
+
+  /* ============================================================
+     SECTION 7 — DIFFERENTIATORS
+     ============================================================ */
+  .differentiators { background: var(--volt); }
+  .diff-header { margin-bottom: clamp(2.5rem, 6vw, 4rem); }
+  .diff-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; position: relative; z-index: 1; }
+  .diff-table thead { display: none; }
+  @media (min-width: 640px) { .diff-table thead { display: table-header-group; } }
+  .diff-table th { text-align: left; padding: 1rem 1.25rem; font-weight: 700; letter-spacing: 0.04em; font-size: 0.8rem; text-transform: uppercase; color: var(--steel-text); border-bottom: 2px solid rgba(0, 212, 255, 0.15); }
+  .diff-table th:last-child { color: var(--cyan); }
+  .diff-table td { padding: 1rem 1.25rem; border-bottom: 1px solid rgba(0, 212, 255, 0.06); color: var(--steel-text); }
+  .diff-table td:last-child { color: var(--ice); }
+  .diff-table tr:last-child td { border-bottom: none; }
+  .diff-table .check { color: var(--cyan); font-weight: 700; }
+  @media (max-width: 639px) {
+    .diff-table, .diff-table tbody, .diff-table tr, .diff-table td { display: block; }
+    .diff-table tr { padding: 1rem 0; border-bottom: 1px solid rgba(0, 212, 255, 0.06); }
+    .diff-table td { padding: 0.3rem 0; border-bottom: none; display: flex; justify-content: space-between; gap: 0.5rem; }
+    .diff-table td::before { content: attr(data-label); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--steel-text); flex-shrink: 0; }
+    .diff-table td:first-child::before { content: 'Feature'; }
+    .diff-table td:last-child::before  { content: 'Cloud Surveillance'; }
+  }
+
+  /* ============================================================
+     SECTION 8 — CTA
+     ============================================================ */
+  .cta-section { background: linear-gradient(180deg, var(--abyss) 0%, var(--electric) 60%, var(--abyss) 100%); text-align: center; position: relative; overflow: hidden; }
+  .cta-section::before { content: ''; position: absolute; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(0, 212, 255, 0.06) 0%, transparent 70%); top: -150px; left: 50%; transform: translateX(-50%); z-index: 0; }
+  .cta-content { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+  .cta-content h2 { margin-bottom: 1rem; }
+  .cta-content p { margin-bottom: 2rem; font-size: 1.05rem; }
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 1rem 2.5rem;
+    background: var(--cyan);
+    border: none;
+    color: var(--abyss);
+    font-size: 1rem; font-weight: 700;
+    font-family: var(--font-body);
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cta-btn:hover, .cta-btn:focus-visible { background: var(--azure); color: var(--white); }
+  .cta-btn svg { flex-shrink: 0; }
+
+  /* ============================================================
+     FOOTER
+     ============================================================ */
+  .footer { background: var(--abyss); padding: clamp(2rem, 5vw, 4rem) 0; border-top: 1px solid rgba(0, 212, 255, 0.08); position: relative; }
+  .footer-content { display: flex; flex-direction: column; gap: 1.5rem; align-items: center; text-align: center; position: relative; z-index: 1; }
+  @media (min-width: 640px) { .footer-content { flex-direction: row; justify-content: space-between; text-align: left; } }
+  .footer-brand { font-weight: 700; font-size: 1rem; color: var(--white); }
+  .footer-brand span { color: var(--cyan); }
+  .footer-info { font-size: 0.8rem; color: var(--steel-text); }
+
+  /* Footer dot constellation accent */
+  .footer-accent {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    z-index: 0; pointer-events: none; opacity: 0.08;
+  }
+  .footer-accent svg { width: min(300px, 70vw); height: auto; }
+
+  /* Animations */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease-out, transform 0.7s ease-out; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+  ::selection { background: rgba(0, 212, 255, 0.25); color: var(--white); }
+</style>
+</head>
+<body>
+
+<canvas class="geo-bg" id="geoBg" aria-hidden="true"></canvas>
+
+<nav class="nav" id="nav">
+  <a href="#hero" class="nav-logo">TALOS<span>VISION</span></a>
+  <ul class="nav-links">
+    <li><a href="#platform">Platform</a></li>
+    <li><a href="#suite">Applications</a></li>
+    <li><a href="#modes">Modes</a></li>
+    <li><a href="#verticals">Verticals</a></li>
+    <li><a href="#differentiators">Why TalosVision</a></li>
+  </ul>
+</nav>
+
+<!-- ============================================================
+     SECTION 1 — HERO
+     ============================================================ -->
+<section class="hero" id="hero">
+
+  <!-- Concentric ring accent behind hero -->
+  <div class="hero-ring-accent" aria-hidden="true">
+    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="200" cy="200" r="170" fill="none" stroke="#00D4FF" stroke-width="1" stroke-dasharray="8 4" opacity="0.5"/>
+      <circle cx="200" cy="200" r="150" fill="none" stroke="#3B82F6" stroke-width="0.6" opacity="0.3"/>
+      <circle cx="200" cy="200" r="130" fill="none" stroke="#00D4FF" stroke-width="0.8" opacity="0.35"/>
+      <circle cx="200" cy="25" r="3" fill="#00D4FF" opacity="0.6"/>
+      <circle cx="200" cy="375" r="3" fill="#00D4FF" opacity="0.6"/>
+      <circle cx="375" cy="200" r="2.5" fill="#3B82F6" opacity="0.5"/>
+      <circle cx="25" cy="200" r="2.5" fill="#3B82F6" opacity="0.5"/>
+      <circle cx="322" cy="78" r="2" fill="#E8F4FD" opacity="0.4"/>
+      <circle cx="78" cy="322" r="2" fill="#E8F4FD" opacity="0.4"/>
+      <circle cx="322" cy="322" r="2" fill="#E8F4FD" opacity="0.4"/>
+      <circle cx="78" cy="78" r="2" fill="#E8F4FD" opacity="0.4"/>
+    </svg>
+  </div>
+
+    <!-- SVG Logo: Background decorations (absolute layer) -->
+    <div class="logo-container reveal">
+      <div class="logo-bg-deco" aria-hidden="true">
+        <svg viewBox="0 0 860 320" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="ringGradBG" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#00D4FF"/>
+              <stop offset="25%" stop-color="#3B82F6"/>
+              <stop offset="50%" stop-color="#00D4FF"/>
+              <stop offset="75%" stop-color="#3B82F6"/>
+              <stop offset="100%" stop-color="#00D4FF"/>
+            </linearGradient>
+            <radialGradient id="cyanGlowBG" cx="50%" cy="50%">
+              <stop offset="0%" stop-color="#00D4FF" stop-opacity="0.10"/>
+              <stop offset="100%" stop-color="#00D4FF" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <ellipse cx="430" cy="140" rx="280" ry="120" fill="url(#cyanGlowBG)"/>
+          <circle cx="430" cy="135" r="140" fill="none" stroke="url(#ringGradBG)" stroke-width="1.2" stroke-dasharray="8 4" opacity="0.5"/>
+          <circle cx="430" cy="135" r="130" fill="none" stroke="url(#ringGradBG)" stroke-width="0.6" opacity="0.3"/>
+          <circle cx="430" cy="135" r="150" fill="none" stroke="url(#ringGradBG)" stroke-width="0.4" opacity="0.15"/>
+          <circle cx="430" cy="5" r="3" fill="#00D4FF" opacity="0.7"/>
+          <circle cx="560" cy="75" r="2.5" fill="#3B82F6" opacity="0.6"/>
+          <circle cx="560" cy="195" r="2.5" fill="#3B82F6" opacity="0.6"/>
+          <circle cx="430" cy="275" r="3" fill="#00D4FF" opacity="0.7"/>
+          <circle cx="300" cy="195" r="2.5" fill="#3B82F6" opacity="0.6"/>
+          <circle cx="300" cy="75" r="2.5" fill="#3B82F6" opacity="0.6"/>
+          <circle cx="530" cy="25" r="1.8" fill="#E8F4FD" opacity="0.5"/>
+          <circle cx="580" cy="135" r="1.8" fill="#E8F4FD" opacity="0.5"/>
+          <circle cx="280" cy="135" r="1.8" fill="#E8F4FD" opacity="0.5"/>
+          <circle cx="330" cy="10" r="1.8" fill="#E8F4FD" opacity="0.5"/>
+          <line x1="430" y1="8" x2="430" y2="2" stroke="#00D4FF" stroke-width="0.5" opacity="0.3"/>
+          <line x1="560" y1="77.5" x2="558" y2="73" stroke="#3B82F6" stroke-width="0.5" opacity="0.25"/>
+          <line x1="430" y1="272" x2="430" y2="278" stroke="#00D4FF" stroke-width="0.5" opacity="0.3"/>
+        </svg>
+      </div>
+      <div class="logo-text-layer">
+        <span class="logo-wordmark">TALOS<span class="logo-vision">VISION</span></span>
+        <span class="logo-underline"></span>
+      </div>
+    </div>
+
+    <div class="hero-divider reveal" aria-hidden="true"></div>
+
+    <a href="#suite" class="hero-cta reveal">
+      Explore the Suite
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+    </a>
+</section>
+
+<!-- ============================================================
+     SECTION 2 — APPLICATION SUITE
+     ============================================================ -->
+<section class="section suite" id="suite">
+  <div class="container">
+    <div class="suite-header reveal">
+      <span class="section-label">Application Suite</span>
+      <h2>Six specialised applications.<br>One unified platform.</h2>
+      <div class="accent-line"></div>
+    </div>
+
+    <div class="grid-e">
+      <div class="card-e reveal">
+        <div class="card-e-img" style="background-image: url('../assets/talosvision-optic.png');"></div>
+        <div class="card-e-body">
+          <span class="product-number">01 / 06</span>
+          <h3><span class="product-brand">TalosVision</span> Optic</h3>
+          <p class="product-function">Attendance Management + Vision-Powered 2FA</p>
+          <p class="card-e-desc">Seamlessly verify identity and track attendance with vision-powered 2FA, dynamic QR codes, and NFC — designed for high-throughput gates and scheduled entry points.</p>
+          <div class="badge-strip">
+            <span class="badge">Dynamic QR / NFC</span>
+            <span class="badge">Facial Recognition 2FA</span>
+            <span class="badge">Fast-Gate Scenarios</span>
+            <span class="badge">Scheduled Attendance</span>
+            <span class="badge">Guardian Notifications</span>
+            <span class="badge">Unauthorised Alerts</span>
+          </div>
+          <p class="product-modes">Zone · Portal</p>
+        </div>
+      </div>
+
+      <div class="card-e reveal">
+        <div class="card-e-img" style="background-image: url('../assets/talosvision-pulse.png');"></div>
+        <div class="card-e-body">
+          <span class="product-number">02 / 06</span>
+          <h3><span class="product-brand">TalosVision</span> Pulse</h3>
+          <p class="product-function">Vision-Adaptive Digital Signage</p>
+          <p class="card-e-desc">Adapt digital signage in real time based on who's watching — auto-trigger playlists, measure dwell time, and deliver demographically-targeted content.</p>
+          <div class="badge-strip">
+            <span class="badge">Read the Room</span>
+            <span class="badge">Auto-Trigger Playlists</span>
+            <span class="badge">Demographic-Driven Delivery</span>
+            <span class="badge">Impression Metrics</span>
+            <span class="badge">Content Management Portal</span>
+            <span class="badge">Dwell Time Analytics</span>
+          </div>
+          <p class="product-modes">Focus · Portal · Zone</p>
+        </div>
+      </div>
+
+      <div class="card-e reveal">
+        <div class="card-e-img" style="background-image: url('../assets/talosvision-sonar.png');"></div>
+        <div class="card-e-body">
+          <span class="product-number">03 / 06</span>
+          <h3><span class="product-brand">TalosVision</span> Sonar</h3>
+          <p class="product-function">Access Control + Area Monitoring</p>
+          <p class="card-e-desc">Monitor foot traffic, detect crowd build-up, flag tailgating events, and match watchlists — all through real-time annotated video streams and activity heatmaps.</p>
+          <div class="badge-strip">
+            <span class="badge">Real-Time People Counters</span>
+            <span class="badge">Demographic Insights</span>
+            <span class="badge">Activity Heatmaps</span>
+            <span class="badge">Crowd Build-Up Detection</span>
+            <span class="badge">Tailgating Flags</span>
+            <span class="badge">Live Annotated Streams</span>
+            <span class="badge">Watchlist Matching</span>
+          </div>
+          <p class="product-modes">Portal</p>
+        </div>
+      </div>
+
+      <div class="card-e reveal">
+        <div class="card-e-img" style="background-image: url('../assets/talosvision-aether.png');"></div>
+        <div class="card-e-body">
+          <span class="product-number">04 / 06</span>
+          <h3><span class="product-brand">TalosVision</span> Aether</h3>
+          <p class="product-function">Wearable Mobile Security (Goggles + Drone)</p>
+          <p class="card-e-desc">Empower mobile security personnel with wearable goggles and drone integration — instant face matching under 100ms, collaborative marking, and central command sync.</p>
+          <div class="badge-strip">
+            <span class="badge">Instant Audio Alerts</span>
+            <span class="badge">Central Command Integration</span>
+            <span class="badge">Collaborative Marking</span>
+            <span class="badge">Sub-100ms Face Match</span>
+            <span class="badge">Multi-Camera Mesh</span>
+            <span class="badge">Drone Mode</span>
+          </div>
+          <p class="product-modes">Wearable · Aerial</p>
+        </div>
+      </div>
+
+      <div class="card-e reveal">
+        <div class="card-e-img" style="background-image: url('../assets/talosvision-nexus.png');"></div>
+        <div class="card-e-body">
+          <span class="product-number">05 / 06</span>
+          <h3><span class="product-brand">TalosVision</span> Nexus</h3>
+          <p class="product-function">Guard Monitoring & Personnel Vigilance Oversight</p>
+          <p class="card-e-desc">Oversee guard vigilance across multiple posts with inactivity detection, customisable alerts, live annotated video, and automated shift handover reports.</p>
+          <div class="badge-strip">
+            <span class="badge">Activity/Inactivity Detection</span>
+            <span class="badge">Customisable Alerts</span>
+            <span class="badge">Instant Notifications</span>
+            <span class="badge">Live Video with Annotations</span>
+            <span class="badge">Shift Handover Reports</span>
+            <span class="badge">Multi-Post Monitoring</span>
+          </div>
+          <p class="product-modes">Zone</p>
+        </div>
+      </div>
+
+      <div class="card-e reveal">
+        <div class="card-e-img" style="background-image: url('../assets/talos-vision-spectral.png');"></div>
+        <div class="card-e-body">
+          <span class="product-number">06 / 06</span>
+          <h3><span class="product-brand">TalosVision</span> Spectral</h3>
+          <p class="product-function">Multi-Site Aggregation & Centralised Command</p>
+          <p class="card-e-desc">Aggregate data from all sites into a single pane of glass — unified alerts, cross-site analytics, SSO authentication, and degraded-mode resilience.</p>
+          <div class="badge-strip">
+            <span class="badge">6 Aggregated Report Types</span>
+            <span class="badge">Matrix Groups & Membership</span>
+            <span class="badge">SSO (JWT-Based)</span>
+            <span class="badge">Degraded Mode</span>
+            <span class="badge">60s Result Caching</span>
+            <span class="badge">Cross-Site Analytics</span>
+            <span class="badge">Unified Alert Management</span>
+          </div>
+          <p class="product-modes">All Modes — Aggregated</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 3 — PLATFORM OVERVIEW
+     ============================================================ -->
+<section class="section platform" id="platform">
+  <div class="container">
+    <div class="platform-header reveal">
+      <span class="section-label">The Platform</span>
+      <h2>Unified Machine Vision.<br>Zero Cloud. Infinite Scale.</h2>
+      <div class="accent-line"></div>
+    </div>
+
+    <div class="capability-grid reveal">
+      <div class="cap-card">
+        <span class="cap-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="5" width="22" height="16" rx="3"/><circle cx="12" cy="13" r="4"/></svg></span>
+        <h4>Any Camera</h4>
+        <p>IP, WiFi, and mobile cameras — no vendor lock-in, no proprietary hardware.</p>
+      </div>
+      <div class="cap-card">
+        <span class="cap-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="8" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="12" cy="16" r="2"/><line x1="6" y1="10" x2="10" y2="14"/><line x1="18" y1="10" x2="14" y2="14"/><path d="M8 8c1 0 4-1 8 0"/></svg></span>
+        <h4>On-Device AI</h4>
+        <p>Real-time face detection, people counting, demographic analysis, and route tracking.</p>
+      </div>
+      <div class="cap-card">
+        <span class="cap-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4m0 12v4M2 12h4m12 0h4M5.6 5.6l2.8 2.8m7.2 7.2l2.8 2.8M5.6 18.4l2.8-2.8m7.2-7.2l2.8-2.8"/></svg></span>
+        <h4>Infinite Scale</h4>
+        <p>Unlimited cameras. From a single lens to a facility-wide mesh — no ceiling.</p>
+      </div>
+      <div class="cap-card">
+        <span class="cap-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="12" rx="3"/><circle cx="12" cy="16" r="1.5" fill="currentColor"/><path d="M7 10V7a5 5 0 0110 0v3"/></svg></span>
+        <h4>Zero Cloud</h4>
+        <p>All video and data remain on-premises. Footage never leaves your infrastructure.</p>
+      </div>
+      <div class="cap-card">
+        <span class="cap-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><line x1="11" y1="19" x2="13" y2="19"/></svg></span>
+        <h4>VPN-Secured Remote</h4>
+        <p>Full operational control from any mobile device via encrypted VPN tunnel.</p>
+      </div>
+      <div class="cap-card">
+        <span class="cap-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 10 14 8 22 18 10 11 10 13 2"/></svg></span>
+        <h4>Sub-5-Minute Setup</h4>
+        <p>Plug-and-play deployment on standard hardware. First detection in minutes.</p>
+      </div>
+    </div>
+
+    <!-- Pulse waveform accent above stats -->
+    <div class="stats-accent" aria-hidden="true">
+      <svg viewBox="0 0 500 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <polyline points="0,70 50,70 75,25 100,55 130,10 160,65 190,30 220,50 260,5 300,60 330,20 370,45 400,15 440,55 470,35 500,60" fill="none" stroke="#00D4FF" stroke-width="1.5"/>
+        <polyline points="0,80 50,80 75,35 100,65 130,20 160,75 190,40 220,60 260,15 300,70 330,30 370,55 400,25 440,65 470,45 500,70" fill="none" stroke="#3B82F6" stroke-width="0.8"/>
+      </svg>
+    </div>
+
+    <div class="stats-row reveal">
+      <div class="stat-item">
+        <span class="stat-value">≤50<span style="font-size:0.5em;font-weight:600;">ms</span></span>
+        <span class="stat-label">Detection Latency</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">99.7<span style="font-size:0.4em;font-weight:600;">%</span></span>
+        <span class="stat-label">Platform Uptime</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">16<span style="font-size:0.4em;font-weight:600;">GB</span></span>
+        <span class="stat-label">Minimum Hardware</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value"><1<span style="font-size:0.5em;font-weight:600;">s</span></span>
+        <span class="stat-label">Verification Speed (2FA)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 4 — TARGET VERTICALS
+     ============================================================ -->
+<section class="section verticals" id="verticals">
+  <div class="container">
+    <div class="verticals-header reveal">
+      <span class="section-label">Target Verticals</span>
+      <h2>Mission-critical intelligence<br>across every sector.</h2>
+      <div class="accent-line"></div>
+    </div>
+
+    <div class="vertical-scroll reveal">
+
+      <div class="vert-card">
+        <div class="vert-card-img" style="background-image: url('../assets/talosvision-shipping.png');" role="img" aria-label="Maritime & Shipping"></div>
+        <div class="vert-card-body">
+          <h4><span class="vert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18L4 7h16l2 11H2z"/><path d="M4 7l2-5h12l2 5"/><line x1="2" y1="18" x2="22" y2="18"/></svg></span>Maritime & Shipping</h4>
+          <p class="vert-desc">Crew presence, access control, perimeter protection, fleet-wide aggregation.</p>
+          <div class="vert-apps"><span class="vert-app-tag">Optic</span><span class="vert-app-tag">Sonar</span><span class="vert-app-tag">Spectral</span></div>
+        </div>
+      </div>
+
+      <div class="vert-card">
+        <div class="vert-card-img" style="background-image: url('../assets/talosvision-hospitals.png');" role="img" aria-label="Healthcare & Hospitals"></div>
+        <div class="vert-card-body">
+          <h4><span class="vert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></span>Healthcare & Hospitals</h4>
+          <p class="vert-desc">Staff attendance, restricted area monitoring, visitor management.</p>
+          <div class="vert-apps"><span class="vert-app-tag">Optic</span><span class="vert-app-tag">Sonar</span><span class="vert-app-tag">Nexus</span></div>
+        </div>
+      </div>
+
+      <div class="vert-card">
+        <div class="vert-card-img" style="background-image: url('../assets/talosvision-defence.png');" role="img" aria-label="Government & Defence"></div>
+        <div class="vert-card-body">
+          <h4><span class="vert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><line x1="3" y1="10" x2="21" y2="10"/><polygon points="12 2 2 10 22 10"/><line x1="8" y1="10" x2="8" y2="21"/><line x1="16" y1="10" x2="16" y2="21"/></svg></span>Government & Defence</h4>
+          <p class="vert-desc">VIP protection, facility security, guard monitoring, multi-site command.</p>
+          <div class="vert-apps"><span class="vert-app-tag">Aether</span><span class="vert-app-tag">Nexus</span><span class="vert-app-tag">Spectral</span></div>
+        </div>
+      </div>
+
+      <div class="vert-card">
+        <div class="vert-card-img" style="background-image: url('../assets/talosvision-education.png');" role="img" aria-label="Education"></div>
+        <div class="vert-card-body">
+          <h4><span class="vert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 8-4.5V15"/><path d="M2 7v5c0 3 4 5 10 5s10-2 10-5V7"/></svg></span>Education</h4>
+          <p class="vert-desc">Student attendance, campus access control, guardian notifications.</p>
+          <div class="vert-apps"><span class="vert-app-tag">Optic</span><span class="vert-app-tag">Sonar</span></div>
+        </div>
+      </div>
+
+      <div class="vert-card">
+        <div class="vert-card-img" style="background-image: url('../assets/talos-vision-commercial.png');" role="img" aria-label="Retail & Commercial"></div>
+        <div class="vert-card-body">
+          <h4><span class="vert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16l-1 14H5L4 7z"/><path d="M7 7V5a5 5 0 0110 0v2"/></svg></span>Retail & Commercial</h4>
+          <p class="vert-desc">Demographic-driven signage, footfall analytics, marketing ROI.</p>
+          <div class="vert-apps"><span class="vert-app-tag">Pulse</span><span class="vert-app-tag">Sonar</span></div>
+        </div>
+      </div>
+
+      <div class="vert-card">
+        <div class="vert-card-img" style="background-image: url('../assets/talosvision-industrial.png');" role="img" aria-label="Industrial & Logistics"></div>
+        <div class="vert-card-body">
+          <h4><span class="vert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="7"/><line x1="12" y1="5" x2="12" y2="1"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="5" y1="12" x2="1" y2="12"/><line x1="19" y1="12" x2="23" y2="12"/></svg></span>Industrial & Logistics</h4>
+          <p class="vert-desc">Area monitoring, restricted zone enforcement, lone-worker safety.</p>
+          <div class="vert-apps"><span class="vert-app-tag">Sonar</span><span class="vert-app-tag">Nexus</span></div>
+        </div>
+      </div>
+
+      <div class="vert-card">
+        <div class="vert-card-img" style="background-image: url('../assets/talosvision-security.png');" role="img" aria-label="Security Services"></div>
+        <div class="vert-card-body">
+          <h4><span class="vert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L3 7v5c0 5.5 4 10.5 9 12 5-1.5 9-6.5 9-12V7l-9-5z"/><circle cx="12" cy="13" r="2"/><rect x="10" y="13" width="4" height="5" rx="1"/></svg></span>Security Services</h4>
+          <p class="vert-desc">Guard oversight, wearable field operations, centralised SOC.</p>
+          <div class="vert-apps"><span class="vert-app-tag">Aether</span><span class="vert-app-tag">Nexus</span><span class="vert-app-tag">Spectral</span></div>
+        </div>
+      </div>
+
+      <div class="vert-card">
+        <div class="vert-card-img" style="background-image: url('../assets/talosvision-events.png');" role="img" aria-label="Events & Venues"></div>
+        <div class="vert-card-body">
+          <h4><span class="vert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="8" width="20" height="13" rx="2"/><path d="M2 8l4-5h12l4 5"/><line x1="10" y1="8" x2="10" y2="21"/><line x1="14" y1="8" x2="14" y2="21"/></svg></span>Events & Venues</h4>
+          <p class="vert-desc">Crowd analytics, access control, VIP protection.</p>
+          <div class="vert-apps"><span class="vert-app-tag">Sonar</span><span class="vert-app-tag">Aether</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 5 — SUPPORTING CAPABILITIES
+     ============================================================ -->
+<section class="section capabilities" id="capabilities">
+  <div class="container">
+    <div class="capabilities-header reveal">
+      <span class="section-label">Supporting Capabilities</span>
+      <h2>Beyond the core suite.</h2>
+      <div class="accent-line"></div>
+    </div>
+
+    <div class="cap-grid reveal">
+      <div class="cap-feature-card">
+        <span class="cap-feature-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="14" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="18" x2="12" y2="20"/></svg></span>
+        <h4>Remote Command</h4>
+        <p>Full operational control from any mobile device — live feeds, push alerts, full configuration.</p>
+      </div>
+      <div class="cap-feature-card">
+        <span class="cap-feature-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L3 7v5c0 5.5 4 10.5 9 12 5-1.5 9-6.5 9-12V7l-9-5z"/></svg></span>
+        <h4>Perimeter Shield</h4>
+        <p>Virtual perimeters around any zone, enforced 24/7 by AI. Sub-second detection-to-alert.</p>
+      </div>
+      <div class="cap-feature-card">
+        <span class="cap-feature-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 9 22 9 16 14 18 21 12 17 6 21 8 14 2 9 9 9"/></svg></span>
+        <h4>Elite Watch</h4>
+        <p>Protect VIPs with sub-100ms face matching and multi-camera coordination across entire venues.</p>
+      </div>
+      <div class="cap-feature-card">
+        <span class="cap-feature-icon" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 15l-3 7 3-1 3 1-3-7z"/><path d="M9 10c-3-3-5-7-5-7s4 0 8 3"/><path d="M15 10c3-3 5-7 5-7s-4 0-8 3"/></svg></span>
+        <h4>Rapid Deploy</h4>
+        <p>16 GB RAM, a modern CPU — that's all. No GPU required. No cloud subscriptions. Plug & play.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 6 — OPERATING MODES
+     ============================================================ -->
+<section class="section modes" id="modes">
+  <div class="container">
+    <div class="modes-header reveal">
+      <span class="section-label">Operating Modes</span>
+      <h2>Five deployment configurations.<br>One platform.</h2>
+      <div class="accent-line"></div>
+    </div>
+
+    <div class="mode-grid reveal">
+      <div class="mode-card">
+        <span class="mode-icon" aria-hidden="true"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
+        <h4>Focus Mode</h4>
+        <p>Precise monitoring of fixed, close-range areas — kiosks, reception desks, ID verification.</p>
+      </div>
+      <div class="mode-card">
+        <span class="mode-icon" aria-hidden="true"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V3h12v18"/><path d="M3 21h18"/><path d="M15 3l6 3v15l-6 3"/></svg></span>
+        <h4>Portal Mode</h4>
+        <p>Comprehensive monitoring of entrances, exits, corridors — lobbies, gates, turnstiles.</p>
+      </div>
+      <div class="mode-card">
+        <span class="mode-icon" aria-hidden="true"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="8" width="5" height="13"/><rect x="9" y="4" width="6" height="17"/><rect x="17" y="10" width="5" height="11"/></svg></span>
+        <h4>Zone Mode</h4>
+        <p>Wide-area surveillance for large spaces — warehouses, factory floors, public plazas.</p>
+      </div>
+      <div class="mode-card">
+        <span class="mode-icon" aria-hidden="true"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
+        <h4>Wearable Mode</h4>
+        <p>Mobile, first-person monitoring via eyewear — field agents, patrol officers, VIP details.</p>
+      </div>
+      <div class="mode-card">
+        <span class="mode-icon" aria-hidden="true"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="2"/><line x1="12" y1="10" x2="12" y2="18"/><line x1="12" y1="18" x2="4" y2="22"/><line x1="12" y1="18" x2="20" y2="22"/><line x1="4" y1="22" x2="20" y2="22"/></svg></span>
+        <h4>Aerial Mode</h4>
+        <p>Overhead surveillance via drone — perimeter patrol, crowd monitoring, search operations.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 7 — DIFFERENTIATORS
+     ============================================================ -->
+<section class="section differentiators" id="differentiators">
+  <div class="container">
+    <div class="diff-header reveal">
+      <span class="section-label">Why TalosVision</span>
+      <h2>Enterprise-grade. On-premises.<br>Certification-ready.</h2>
+      <div class="accent-line"></div>
+    </div>
+
+    <div class="reveal" style="overflow-x:auto;">
+      <table class="diff-table">
+        <thead>
+          <tr><th>Differentiator</th><th>TalosVision</th><th>Typical Cloud Surveillance</th></tr>
+        </thead>
+        <tbody>
+          <tr><td data-label="Differentiator">Data Location</td><td data-label="TalosVision" class="check">On-Premises Only</td><td data-label="Typical Cloud Surveillance">Cloud-Dependent</td></tr>
+          <tr><td data-label="Differentiator">Internet Required</td><td data-label="TalosVision" class="check">No (VPN optional)</td><td data-label="Typical Cloud Surveillance">Yes (mandatory)</td></tr>
+          <tr><td data-label="Differentiator">GPU Required</td><td data-label="TalosVision" class="check">No</td><td data-label="Typical Cloud Surveillance">Often Required</td></tr>
+          <tr><td data-label="Differentiator">Recurring Cloud Fees</td><td data-label="TalosVision" class="check">None</td><td data-label="Typical Cloud Surveillance">Monthly / Annual</td></tr>
+          <tr><td data-label="Differentiator">Offline Operation</td><td data-label="TalosVision" class="check">Full</td><td data-label="Typical Cloud Surveillance">Limited / None</td></tr>
+          <tr><td data-label="Differentiator">Certification Ready</td><td data-label="TalosVision" class="check">ISO 9001 / 13485 / 27001 Aligned</td><td data-label="Typical Cloud Surveillance">Rarely</td></tr>
+          <tr><td data-label="Differentiator">Custom Whitelabel</td><td data-label="TalosVision" class="check">Yes — Full Rebrand</td><td data-label="Typical Cloud Surveillance">Limited</td></tr>
+          <tr><td data-label="Differentiator">Multi-Site Aggregation</td><td data-label="TalosVision" class="check">Native (Spectral)</td><td data-label="Typical Cloud Surveillance">Add-On / Third Party</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 8 — CTA
+     ============================================================ -->
+<section class="section cta-section">
+  <div class="container">
+    <div class="cta-content reveal">
+      <span class="section-label">Next Steps</span>
+      <h2>Ready to see what<br>TalosVision can protect?</h2>
+      <p>Deploy on standard hardware. Scale to hundreds of cameras. Zero cloud. Full control.</p>
+      <a href="https://www.talosgroup.eu" class="cta-btn" target="_blank" rel="noopener">Contact Talos Group <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="footer">
+  <!-- Dot constellation accent -->
+  <div class="footer-accent" aria-hidden="true">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <polyline points="30,60 100,100 170,60" fill="none" stroke="#00D4FF" stroke-width="0.6"/>
+      <polyline points="30,140 100,100 170,140" fill="none" stroke="#3B82F6" stroke-width="0.5"/>
+      <circle cx="100" cy="100" r="4" fill="#00D4FF"/>
+      <circle cx="30" cy="60" r="3" fill="#3B82F6"/>
+      <circle cx="170" cy="60" r="3" fill="#3B82F6"/>
+      <circle cx="30" cy="140" r="3" fill="#3B82F6"/>
+      <circle cx="170" cy="140" r="3" fill="#3B82F6"/>
+      <circle cx="100" cy="30" r="2" fill="#E8F4FD"/>
+      <circle cx="100" cy="170" r="2" fill="#E8F4FD"/>
+    </svg>
+  </div>
+
+  <div class="container">
+    <!-- Footer myth section -->
+    <div class="footer-myth" style="max-width:720px;margin:0 auto 3rem;padding:2rem clamp(1rem,4vw,2rem);background:rgba(0,212,255,0.02);border:1px solid rgba(0,212,255,0.07);text-align:left;">
+      <p class="hero-tagline" style="margin-bottom:0.75rem;text-align:center;">
+        The <em>Guardian Automaton</em> of Crete — Reforged for the Age of Vision
+      </p>
+      <p class="hero-subtitle" style="margin-bottom:1.5rem;text-align:center;">
+        An on-premises, zero-cloud machine vision suite that turns everyday hardware
+        into an unblinking sentinel — protecting facilities, fleets, and enterprises
+        with always-on intelligence.
+      </p>
+      <div style="width:100%;max-width:200px;height:1px;margin:1rem auto 1.5rem;background:linear-gradient(90deg,transparent,var(--cyan),transparent);"></div>
+      <p style="font-size:0.85rem;line-height:1.7;margin-bottom:0.75rem;"><strong style="color:var(--cyan);">The Myth of Talos</strong> — Talos (Τάλως) was a giant automaton forged of bronze by Hephaestus. Gifted to King Minos of Crete, he circled the island three times daily, hurling boulders at approaching ships. A single bronze nail sealed his only vein — his sole vulnerability.</p>
+      <p style="font-size:0.85rem;line-height:1.7;"><span style="color:var(--cyan);font-weight:600;">TalosVision inherits this legacy:</span> an unblinking sentinel powered not by ichor but by intelligence. Where the bronze giant circled an island, our platform surveils perimeters. Where his eyes scanned the horizon, our machine vision detects, counts, and protects — always on, always watching, never resting.</p>
+    </div>
+
+    <div class="footer-content">
+      <div class="footer-brand">TALOS<span>VISION</span></div>
+      <div class="footer-info">
+        © 2026 Talos Group. All rights reserved.
+        3rd Floor, 207 Regent St., London W1B 3HH, United Kingdom · talosgroup.eu
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function() {
+  const canvas = document.getElementById('geoBg');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    let animId;
+    function resize() { canvas.width = window.innerWidth; canvas.height = document.documentElement.scrollHeight; }
+    function drawGrid() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const step = 100, speed = 30;
+      const offset = (Date.now() / speed) % step;
+      const diagSpan = canvas.width + canvas.height;
+      ctx.strokeStyle = 'rgba(0, 212, 255, 0.20)'; ctx.lineWidth = 1.1;
+      for (let d = -step * 2 + offset; d < diagSpan + step * 2; d += step) { ctx.beginPath(); ctx.moveTo(d, 0); ctx.lineTo(d - canvas.height, canvas.height); ctx.stroke(); }
+      ctx.strokeStyle = 'rgba(59, 130, 246, 0.14)'; ctx.lineWidth = 0.7;
+      const counterOffset = (offset * 1.5) % step;
+      for (let d = -step * 2 - counterOffset; d < diagSpan + step * 2; d += step) { ctx.beginPath(); ctx.moveTo(d - canvas.height, 0); ctx.lineTo(d, canvas.height); ctx.stroke(); }
+      animId = requestAnimationFrame(function() { resize(); drawGrid(); });
+    }
+    resize(); drawGrid();
+    document.addEventListener('visibilitychange', function() { if (document.hidden) cancelAnimationFrame(animId); else { resize(); drawGrid(); } });
+  }
+
+  const nav = document.getElementById('nav');
+  let ticking = false;
+  function updateNav() { nav.classList.toggle('scrolled', window.scrollY > 60); ticking = false; }
+  window.addEventListener('scroll', function() { if (!ticking) { requestAnimationFrame(updateNav); ticking = true; } }, { passive: true });
+
+  const revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+    revealEls.forEach(function(el) { observer.observe(el); });
+  } else { revealEls.forEach(function(el) { el.classList.add('visible'); }); }
+
+  document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+    anchor.addEventListener('click', function(e) {
+      e.preventDefault();
+      var href = this.getAttribute('href');
+      if (href === '#suite') {
+        var suite = document.getElementById('suite');
+        if (suite) {
+          var navHeight = nav.offsetHeight || 80;
+          suite.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          return;
+        }
+      }
+      var target = document.querySelector(href);
+      if (target) {
+        var navHeight = nav.offsetHeight || 80;
+        window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - navHeight - 20, behavior: 'smooth' });
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

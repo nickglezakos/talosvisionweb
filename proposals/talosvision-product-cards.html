@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TalosVision — Product Card Design Proposals</title>
+<style>
+  :root {
+    --abyss: #040D18;
+    --deep-navy: #0A1628;
+    --midnight: #0F2142;
+    --electric: #0C1E3D;
+    --volt: #142C54;
+    --cyan: #00D4FF;
+    --azure: #3B82F6;
+    --ice: #E8F4FD;
+    --white: #FFFFFF;
+    --steel-text: #8899AA;
+    --font-display: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-body: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { font-family: var(--font-body); background: var(--abyss); color: var(--white); line-height: 1.6; overflow-x: hidden; }
+  h2 { font-size: clamp(2rem, 4.5vw, 3.8rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.05; }
+  h3 { font-size: clamp(1.2rem, 2.5vw, 2rem); font-weight: 600; line-height: 1.2; }
+  p { color: var(--steel-text); font-size: 1rem; line-height: 1.7; }
+  .container { width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 clamp(1rem, 5vw, 3rem); }
+  .section { padding: clamp(4rem, 10vw, 8rem) 0; }
+  .section-alt { background: var(--electric); }
+  .section-label { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--cyan); margin-bottom: 0.75rem; }
+  .accent-line { width: 60px; height: 3px; background: var(--cyan); margin-bottom: 2rem; }
+  .section-subtitle { color: var(--steel-text); font-size: 1.05rem; max-width: 600px; margin-bottom: 3rem; }
+
+  .badge { display: inline-block; padding: 0.3rem 0.7rem; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em; border: 1px solid rgba(0,212,255,0.2); color: var(--ice); background: rgba(0,212,255,0.05); white-space: nowrap; }
+  .product-number { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; color: var(--cyan); text-transform: uppercase; }
+  .product-function { color: var(--steel-text); font-size: 0.85rem; }
+  .product-modes { font-size: 0.72rem; color: var(--steel-text); letter-spacing: 0.04em; font-weight: 600; }
+  .product-modes span { color: var(--cyan); }
+
+  .geo-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.08; }
+
+  /* ============================================================
+     HEADER
+     ============================================================ */
+  .page-header { padding: 3rem 0 2rem; text-align: center; position: relative; z-index: 1; }
+  .page-header h1 { font-size: clamp(1.8rem, 5vw, 4rem); font-weight: 800; letter-spacing: -0.03em; }
+  .page-header h1 span { color: var(--cyan); }
+  .divider { width: 200px; height: 2px; margin: 1.5rem auto; background: linear-gradient(90deg, transparent, var(--cyan), transparent); }
+
+  /* ============================================================
+     VARIATION A — STACKED BLOCK
+     ============================================================ */
+  .grid-a { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+  @media (min-width: 640px)  { .grid-a { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1024px) { .grid-a { grid-template-columns: repeat(3, 1fr); } }
+
+  .card-a {
+    background: var(--midnight);
+    border-left: 8px solid;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+  .card-a:nth-child(1) { border-left-color: var(--cyan); }
+  .card-a:nth-child(2) { border-left-color: var(--azure); }
+  .card-a:nth-child(3) { border-left-color: var(--cyan); }
+  .card-a:nth-child(4) { border-left-color: var(--azure); }
+  .card-a:nth-child(5) { border-left-color: var(--cyan); }
+  .card-a:nth-child(6) { border-left-color: var(--azure); }
+  .card-a:hover { transform: translateX(6px); }
+  .card-a .watermark-number {
+    position: absolute;
+    right: 0.5rem; top: -0.3rem;
+    font-size: 6rem; font-weight: 900;
+    color: rgba(0,212,255,0.04);
+    line-height: 1; z-index: 0;
+    pointer-events: none;
+    font-family: var(--font-display);
+  }
+  .card-a .card-content { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 1rem; }
+  .card-a h3 { color: var(--white); }
+  .card-a .badge-strip { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+  .card-a .modes-strip { margin-top: auto; padding-top: 0.75rem; border-top: 1px solid rgba(0,212,255,0.08); }
+
+  /* ============================================================
+     VARIATION B — GLASS PANEL
+     ============================================================ */
+  .grid-b { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+  @media (min-width: 640px)  { .grid-b { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1024px) { .grid-b { grid-template-columns: repeat(3, 1fr); } }
+
+  .card-b {
+    background: rgba(15,33,66,0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(0,212,255,0.12);
+    border-radius: 2px;
+    padding: 2rem;
+    position: relative;
+    text-align: center;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .card-b:hover { border-color: rgba(0,212,255,0.35); transform: translateY(-4px); }
+  .card-b .num-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--cyan);
+    color: var(--cyan);
+    font-weight: 800; font-size: 1rem;
+    font-family: var(--font-display);
+    margin-bottom: 1rem;
+    flex-shrink: 0;
+  }
+  .card-b:nth-child(even) .num-badge { border-color: var(--azure); color: var(--azure); }
+  .card-b h3 { color: var(--white); margin-bottom: 0.3rem; }
+  .card-b .pill-strip { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.35rem; margin-top: 1rem; }
+  .card-b .pill { display: inline-block; padding: 0.25rem 0.65rem; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.03em; border-radius: 20px; color: var(--ice); background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.1); white-space: nowrap; }
+
+  /* ============================================================
+     VARIATION C — EDGE LIT
+     ============================================================ */
+  .grid-c { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+  @media (min-width: 640px)  { .grid-c { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1024px) { .grid-c { grid-template-columns: repeat(3, 1fr); } }
+
+  .card-c {
+    background: var(--midnight);
+    border-top: 3px solid;
+    padding: 1.75rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .card-c:nth-child(1) { border-top-color: var(--cyan); }
+  .card-c:nth-child(2) { border-top-color: var(--azure); }
+  .card-c:nth-child(3) { border-top-color: var(--cyan); }
+  .card-c:nth-child(4) { border-top-color: var(--azure); }
+  .card-c:nth-child(5) { border-top-color: var(--cyan); }
+  .card-c:nth-child(6) { border-top-color: var(--azure); }
+  .card-c:hover { box-shadow: 0 8px 32px rgba(0,212,255,0.08); }
+  .card-c .card-top { display: flex; align-items: flex-start; gap: 1rem; }
+  .card-c .indicator-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    margin-top: 0.35rem; flex-shrink: 0;
+    background: var(--cyan);
+    box-shadow: 0 0 8px var(--cyan);
+  }
+  .card-c:nth-child(even) .indicator-dot { background: var(--azure); box-shadow: 0 0 8px var(--azure); }
+  .card-c h3 { color: var(--white); }
+  .card-c .tag-cloud { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .card-c .footer-strip {
+    margin-top: auto;
+    padding: 0.6rem 1rem;
+    background: rgba(0,212,255,0.04);
+    border-radius: 2px;
+    display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+  }
+  .card-c .footer-strip .status-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; color: var(--cyan); text-transform: uppercase; }
+
+  /* ============================================================
+     VARIATION D — HERO BACKGROUND CARD
+     ============================================================ */
+  .grid-d { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+  @media (min-width: 640px)  { .grid-d { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1024px) { .grid-d { grid-template-columns: repeat(3, 1fr); } }
+
+  .card-d {
+    position: relative;
+    min-height: 340px;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    transition: transform 0.3s;
+  }
+  .card-d:hover { transform: scale(1.02); }
+  .card-d::before {
+    content: '';
+    position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(180deg, rgba(4,13,24,0.25) 0%, rgba(4,13,24,0.78) 100%);
+    transition: opacity 0.35s;
+  }
+  .card-d:hover::before { opacity: 0.55; }
+  .card-d .card-d-content {
+    position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+    padding: 1.75rem;
+    display: flex; flex-direction: column; gap: 0.65rem;
+  }
+  .card-d h3 { color: var(--white); font-size: clamp(1.3rem, 2.2vw, 1.8rem); }
+  .card-d .product-function { color: rgba(232,244,253,0.8); font-size: 0.9rem; }
+  .card-d .badge-strip { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .card-d .modes-strip { margin-top: 0.25rem; }
+  .card-d .photo-credit { position: absolute; top: 0.75rem; right: 1rem; z-index: 2; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(0,212,255,0.7); }
+
+  /* ============================================================
+     VARIATION E — SPLIT PANEL
+     ============================================================ */
+  .grid-e { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+
+  .card-e {
+    background: var(--midnight);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+  }
+  @media (min-width: 560px) { .card-e { flex-direction: row; } }
+  .card-e:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,212,255,0.06); }
+  .card-e .card-e-img {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+  }
+  @media (min-width: 560px) {
+    .card-e .card-e-img { width: 45%; height: auto; min-height: 260px; }
+  }
+  .card-e .card-e-body {
+    flex: 1;
+    padding: 1.75rem;
+    display: flex; flex-direction: column; gap: 0.75rem;
+    justify-content: center;
+    border-left: 1px solid rgba(0,212,255,0.06);
+  }
+  .card-e:nth-child(even) .card-e-body { border-left-color: rgba(59,130,246,0.12); }
+  .card-e h3 { color: var(--white); }
+  .card-e .product-number { font-size: 0.6rem; }
+  .card-e .card-e-desc { color: var(--steel-text); font-size: 0.85rem; line-height: 1.6; max-width: 48rem; }
+  .card-e .badge-strip { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+
+  /* ============================================================
+     VARIATION F — FLOATING IMAGE ACCENT
+     ============================================================ */
+  .grid-f { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+  @media (min-width: 640px)  { .grid-f { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1024px) { .grid-f { grid-template-columns: repeat(3, 1fr); } }
+
+  .card-f {
+    background: var(--midnight);
+    border: 1px solid rgba(0,212,255,0.08);
+    padding: 1.75rem;
+    position: relative;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .card-f:hover { border-color: rgba(0,212,255,0.25); transform: translateY(-3px); }
+  .card-f .card-f-photo {
+    width: 90px; height: 90px;
+    border-radius: 6px;
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    top: -18px;
+    right: 1.25rem;
+    box-shadow: 0 0 22px rgba(0,212,255,0.2), 0 4px 16px rgba(0,0,0,0.5);
+    border: 2px solid rgba(0,212,255,0.15);
+    transition: box-shadow 0.3s, border-color 0.3s;
+  }
+  .card-f:hover .card-f-photo { box-shadow: 0 0 32px rgba(0,212,255,0.35), 0 6px 24px rgba(0,0,0,0.5); border-color: rgba(0,212,255,0.35); }
+  .card-f .card-f-content { display: flex; flex-direction: column; gap: 0.6rem; padding-right: 0; margin-top: 0.25rem; }
+  .card-f h3 { color: var(--white); font-size: 1.3rem; }
+  .card-f .product-function { font-size: 0.85rem; }
+  .card-f .badge-strip { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .card-f .modes-strip { margin-top: 0.3rem; padding-top: 0.5rem; border-top: 1px solid rgba(0,212,255,0.06); }
+
+  ::selection { background: rgba(0, 212, 255, 0.25); color: var(--white); }
+  :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+</style>
+</head>
+<body>
+
+<canvas class="geo-bg" id="geoBg" aria-hidden="true"></canvas>
+
+<header class="page-header">
+  <span class="section-label">Design Exploration</span>
+  <h1>Product Card <span>Proposals</span></h1>
+  <div class="divider"></div>
+  <p class="section-subtitle" style="margin:0 auto;max-width:640px;">Six card design variations for the TalosVision Application Suite. Variations A–C are pure typographic shells — Variations D–F incorporate product photography from the assets/ directory.</p>
+</header>
+
+<!-- ============================================================
+     VARIATION A — STACKED BLOCK
+     ============================================================ -->
+<section class="section">
+  <div class="container">
+    <span class="section-label">Variation A</span>
+    <h2>Stacked Block</h2>
+    <div class="accent-line"></div>
+    <p class="section-subtitle">Oversized left accent border, giant watermark number, generous padding. Reads like a bold data sheet.</p>
+
+    <div class="grid-a">
+      <div class="card-a">
+        <div class="watermark-number">01</div>
+        <div class="card-content">
+          <span class="product-number">01 / Application</span>
+          <h3>TalosVision Optic</h3>
+          <p class="product-function">Attendance Management + Vision-Powered 2FA</p>
+          <div class="badge-strip">
+            <span class="badge">Dynamic QR / NFC</span>
+            <span class="badge">Facial Recognition 2FA</span>
+            <span class="badge">Fast-Gate Scenarios</span>
+            <span class="badge">Scheduled Attendance</span>
+            <span class="badge">Guardian Notifications</span>
+            <span class="badge">Unauthorised Alerts</span>
+          </div>
+          <div class="modes-strip"><p class="product-modes">Operating Modes: <span>Zone · Portal</span></p></div>
+        </div>
+      </div>
+
+      <div class="card-a">
+        <div class="watermark-number">02</div>
+        <div class="card-content">
+          <span class="product-number">02 / Application</span>
+          <h3>TalosVision Pulse</h3>
+          <p class="product-function">Vision-Adaptive Digital Signage</p>
+          <div class="badge-strip">
+            <span class="badge">Read the Room</span>
+            <span class="badge">Auto-Trigger Playlists</span>
+            <span class="badge">Demographic-Driven Delivery</span>
+            <span class="badge">Impression Metrics</span>
+            <span class="badge">Content Management Portal</span>
+            <span class="badge">Dwell Time Analytics</span>
+          </div>
+          <div class="modes-strip"><p class="product-modes">Operating Modes: <span>Focus · Portal · Zone</span></p></div>
+        </div>
+      </div>
+
+      <div class="card-a">
+        <div class="watermark-number">03</div>
+        <div class="card-content">
+          <span class="product-number">03 / Application</span>
+          <h3>TalosVision Sonar</h3>
+          <p class="product-function">Access Control + Area Monitoring</p>
+          <div class="badge-strip">
+            <span class="badge">Real-Time People Counters</span>
+            <span class="badge">Demographic Insights</span>
+            <span class="badge">Activity Heatmaps</span>
+            <span class="badge">Crowd Build-Up Detection</span>
+            <span class="badge">Tailgating Flags</span>
+            <span class="badge">Live Annotated Streams</span>
+            <span class="badge">Watchlist Matching</span>
+          </div>
+          <div class="modes-strip"><p class="product-modes">Operating Modes: <span>Portal</span></p></div>
+        </div>
+      </div>
+
+      <div class="card-a">
+        <div class="watermark-number">04</div>
+        <div class="card-content">
+          <span class="product-number">04 / Application</span>
+          <h3>TalosVision Aether</h3>
+          <p class="product-function">Wearable Mobile Security (Goggles + Drone)</p>
+          <div class="badge-strip">
+            <span class="badge">Instant Audio Alerts</span>
+            <span class="badge">Central Command Integration</span>
+            <span class="badge">Collaborative Marking</span>
+            <span class="badge">Sub-100ms Face Match</span>
+            <span class="badge">Multi-Camera Mesh</span>
+            <span class="badge">Drone Mode</span>
+          </div>
+          <div class="modes-strip"><p class="product-modes">Operating Modes: <span>Wearable · Aerial</span></p></div>
+        </div>
+      </div>
+
+      <div class="card-a">
+        <div class="watermark-number">05</div>
+        <div class="card-content">
+          <span class="product-number">05 / Application</span>
+          <h3>TalosVision Nexus</h3>
+          <p class="product-function">Guard Monitoring & Personnel Vigilance Oversight</p>
+          <div class="badge-strip">
+            <span class="badge">Activity/Inactivity Detection</span>
+            <span class="badge">Customisable Alerts</span>
+            <span class="badge">Instant Notifications</span>
+            <span class="badge">Live Video with Annotations</span>
+            <span class="badge">Shift Handover Reports</span>
+            <span class="badge">Multi-Post Monitoring</span>
+          </div>
+          <div class="modes-strip"><p class="product-modes">Operating Modes: <span>Zone</span></p></div>
+        </div>
+      </div>
+
+      <div class="card-a">
+        <div class="watermark-number">06</div>
+        <div class="card-content">
+          <span class="product-number">06 / Application</span>
+          <h3>TalosVision Spectral</h3>
+          <p class="product-function">Multi-Site Aggregation & Centralised Command</p>
+          <div class="badge-strip">
+            <span class="badge">6 Aggregated Report Types</span>
+            <span class="badge">Matrix Groups & Membership</span>
+            <span class="badge">SSO (JWT-Based)</span>
+            <span class="badge">Degraded Mode</span>
+            <span class="badge">60s Result Caching</span>
+            <span class="badge">Cross-Site Analytics</span>
+            <span class="badge">Unified Alert Management</span>
+          </div>
+          <div class="modes-strip"><p class="product-modes">Operating Modes: <span>All Modes — Aggregated</span></p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     VARIATION B — GLASS PANEL
+     ============================================================ -->
+<section class="section section-alt">
+  <div class="container">
+    <span class="section-label">Variation B</span>
+    <h2>Glass Panel</h2>
+    <div class="accent-line"></div>
+    <p class="section-subtitle">Frosted glass with backdrop blur, circular number badge, pill-shaped feature tags. Centered, modern, airy.</p>
+
+    <div class="grid-b">
+      <div class="card-b">
+        <div class="num-badge">01</div>
+        <span class="product-number">Application</span>
+        <h3>TalosVision Optic</h3>
+        <p class="product-function">Attendance Management + Vision-Powered 2FA</p>
+        <div class="pill-strip">
+          <span class="pill">Dynamic QR / NFC</span>
+          <span class="pill">Facial Recognition 2FA</span>
+          <span class="pill">Fast-Gate Scenarios</span>
+          <span class="pill">Scheduled Attendance</span>
+          <span class="pill">Guardian Notifications</span>
+          <span class="pill">Unauthorised Alerts</span>
+        </div>
+        <p class="product-modes">Zone · Portal</p>
+      </div>
+
+      <div class="card-b">
+        <div class="num-badge">02</div>
+        <span class="product-number">Application</span>
+        <h3>TalosVision Pulse</h3>
+        <p class="product-function">Vision-Adaptive Digital Signage</p>
+        <div class="pill-strip">
+          <span class="pill">Read the Room</span>
+          <span class="pill">Auto-Trigger Playlists</span>
+          <span class="pill">Demographic-Driven Delivery</span>
+          <span class="pill">Impression Metrics</span>
+          <span class="pill">Content Management Portal</span>
+          <span class="pill">Dwell Time Analytics</span>
+        </div>
+        <p class="product-modes">Focus · Portal · Zone</p>
+      </div>
+
+      <div class="card-b">
+        <div class="num-badge">03</div>
+        <span class="product-number">Application</span>
+        <h3>TalosVision Sonar</h3>
+        <p class="product-function">Access Control + Area Monitoring</p>
+        <div class="pill-strip">
+          <span class="pill">Real-Time People Counters</span>
+          <span class="pill">Demographic Insights</span>
+          <span class="pill">Activity Heatmaps</span>
+          <span class="pill">Crowd Build-Up Detection</span>
+          <span class="pill">Tailgating Flags</span>
+          <span class="pill">Live Annotated Streams</span>
+          <span class="pill">Watchlist Matching</span>
+        </div>
+        <p class="product-modes">Portal</p>
+      </div>
+
+      <div class="card-b">
+        <div class="num-badge">04</div>
+        <span class="product-number">Application</span>
+        <h3>TalosVision Aether</h3>
+        <p class="product-function">Wearable Mobile Security (Goggles + Drone)</p>
+        <div class="pill-strip">
+          <span class="pill">Instant Audio Alerts</span>
+          <span class="pill">Central Command Integration</span>
+          <span class="pill">Collaborative Marking</span>
+          <span class="pill">Sub-100ms Face Match</span>
+          <span class="pill">Multi-Camera Mesh</span>
+          <span class="pill">Drone Mode</span>
+        </div>
+        <p class="product-modes">Wearable · Aerial</p>
+      </div>
+
+      <div class="card-b">
+        <div class="num-badge">05</div>
+        <span class="product-number">Application</span>
+        <h3>TalosVision Nexus</h3>
+        <p class="product-function">Guard Monitoring & Personnel Vigilance Oversight</p>
+        <div class="pill-strip">
+          <span class="pill">Activity/Inactivity Detection</span>
+          <span class="pill">Customisable Alerts</span>
+          <span class="pill">Instant Notifications</span>
+          <span class="pill">Live Video with Annotations</span>
+          <span class="pill">Shift Handover Reports</span>
+          <span class="pill">Multi-Post Monitoring</span>
+        </div>
+        <p class="product-modes">Zone</p>
+      </div>
+
+      <div class="card-b">
+        <div class="num-badge">06</div>
+        <span class="product-number">Application</span>
+        <h3>TalosVision Spectral</h3>
+        <p class="product-function">Multi-Site Aggregation & Centralised Command</p>
+        <div class="pill-strip">
+          <span class="pill">6 Aggregated Report Types</span>
+          <span class="pill">Matrix Groups & Membership</span>
+          <span class="pill">SSO (JWT-Based)</span>
+          <span class="pill">Degraded Mode</span>
+          <span class="pill">60s Result Caching</span>
+          <span class="pill">Cross-Site Analytics</span>
+          <span class="pill">Unified Alert Management</span>
+        </div>
+        <p class="product-modes">All Modes — Aggregated</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     VARIATION C — EDGE LIT
+     ============================================================ -->
+<section class="section">
+  <div class="container">
+    <span class="section-label">Variation C</span>
+    <h2>Edge Lit</h2>
+    <div class="accent-line"></div>
+    <p class="section-subtitle">Glowing top-border with indicator dot, badge tag cloud, and a dashboard-style footer strip. Reads like an operational widget.</p>
+
+    <div class="grid-c">
+      <div class="card-c">
+        <div class="card-top">
+          <div class="indicator-dot"></div>
+          <div>
+            <span class="product-number">01 / Application</span>
+            <h3>TalosVision Optic</h3>
+            <p class="product-function">Attendance Management + Vision-Powered 2FA</p>
+          </div>
+        </div>
+        <div class="tag-cloud">
+          <span class="badge">Dynamic QR / NFC</span>
+          <span class="badge">Facial Recognition 2FA</span>
+          <span class="badge">Fast-Gate Scenarios</span>
+          <span class="badge">Scheduled Attendance</span>
+          <span class="badge">Guardian Notifications</span>
+          <span class="badge">Unauthorised Alerts</span>
+        </div>
+        <div class="footer-strip">
+          <span class="status-label">Active</span>
+          <span class="product-modes">Zone · Portal</span>
+        </div>
+      </div>
+
+      <div class="card-c">
+        <div class="card-top">
+          <div class="indicator-dot"></div>
+          <div>
+            <span class="product-number">02 / Application</span>
+            <h3>TalosVision Pulse</h3>
+            <p class="product-function">Vision-Adaptive Digital Signage</p>
+          </div>
+        </div>
+        <div class="tag-cloud">
+          <span class="badge">Read the Room</span>
+          <span class="badge">Auto-Trigger Playlists</span>
+          <span class="badge">Demographic-Driven Delivery</span>
+          <span class="badge">Impression Metrics</span>
+          <span class="badge">Content Management Portal</span>
+          <span class="badge">Dwell Time Analytics</span>
+        </div>
+        <div class="footer-strip">
+          <span class="status-label">Active</span>
+          <span class="product-modes">Focus · Portal · Zone</span>
+        </div>
+      </div>
+
+      <div class="card-c">
+        <div class="card-top">
+          <div class="indicator-dot"></div>
+          <div>
+            <span class="product-number">03 / Application</span>
+            <h3>TalosVision Sonar</h3>
+            <p class="product-function">Access Control + Area Monitoring</p>
+          </div>
+        </div>
+        <div class="tag-cloud">
+          <span class="badge">Real-Time People Counters</span>
+          <span class="badge">Demographic Insights</span>
+          <span class="badge">Activity Heatmaps</span>
+          <span class="badge">Crowd Build-Up Detection</span>
+          <span class="badge">Tailgating Flags</span>
+          <span class="badge">Live Annotated Streams</span>
+          <span class="badge">Watchlist Matching</span>
+        </div>
+        <div class="footer-strip">
+          <span class="status-label">Active</span>
+          <span class="product-modes">Portal</span>
+        </div>
+      </div>
+
+      <div class="card-c">
+        <div class="card-top">
+          <div class="indicator-dot"></div>
+          <div>
+            <span class="product-number">04 / Application</span>
+            <h3>TalosVision Aether</h3>
+            <p class="product-function">Wearable Mobile Security (Goggles + Drone)</p>
+          </div>
+        </div>
+        <div class="tag-cloud">
+          <span class="badge">Instant Audio Alerts</span>
+          <span class="badge">Central Command Integration</span>
+          <span class="badge">Collaborative Marking</span>
+          <span class="badge">Sub-100ms Face Match</span>
+          <span class="badge">Multi-Camera Mesh</span>
+          <span class="badge">Drone Mode</span>
+        </div>
+        <div class="footer-strip">
+          <span class="status-label">Active</span>
+          <span class="product-modes">Wearable · Aerial</span>
+        </div>
+      </div>
+
+      <div class="card-c">
+        <div class="card-top">
+          <div class="indicator-dot"></div>
+          <div>
+            <span class="product-number">05 / Application</span>
+            <h3>TalosVision Nexus</h3>
+            <p class="product-function">Guard Monitoring & Personnel Vigilance Oversight</p>
+          </div>
+        </div>
+        <div class="tag-cloud">
+          <span class="badge">Activity/Inactivity Detection</span>
+          <span class="badge">Customisable Alerts</span>
+          <span class="badge">Instant Notifications</span>
+          <span class="badge">Live Video with Annotations</span>
+          <span class="badge">Shift Handover Reports</span>
+          <span class="badge">Multi-Post Monitoring</span>
+        </div>
+        <div class="footer-strip">
+          <span class="status-label">Active</span>
+          <span class="product-modes">Zone</span>
+        </div>
+      </div>
+
+      <div class="card-c">
+        <div class="card-top">
+          <div class="indicator-dot"></div>
+          <div>
+            <span class="product-number">06 / Application</span>
+            <h3>TalosVision Spectral</h3>
+            <p class="product-function">Multi-Site Aggregation & Centralised Command</p>
+          </div>
+        </div>
+        <div class="tag-cloud">
+          <span class="badge">6 Aggregated Report Types</span>
+          <span class="badge">Matrix Groups & Membership</span>
+          <span class="badge">SSO (JWT-Based)</span>
+          <span class="badge">Degraded Mode</span>
+          <span class="badge">60s Result Caching</span>
+          <span class="badge">Cross-Site Analytics</span>
+          <span class="badge">Unified Alert Management</span>
+        </div>
+        <div class="footer-strip">
+          <span class="status-label">Active</span>
+          <span class="product-modes">All Modes — Aggregated</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     VARIATION D — HERO BACKGROUND CARD
+     ============================================================ -->
+<section class="section section-alt">
+  <div class="container">
+    <span class="section-label">Variation D</span>
+    <h2>Hero Background</h2>
+    <div class="accent-line"></div>
+    <p class="section-subtitle">Full-bleed product photo as the card canvas. Dark gradient overlay keeps text legible while the image breathes underneath. Hover reveals more of the photo.</p>
+
+    <div class="grid-d">
+      <div class="card-d" style="background-image: url('../assets/talosvision-optic.png');">
+        <span class="photo-credit">Photo</span>
+        <div class="card-d-content">
+          <span class="product-number">01 / Application</span>
+          <h3>TalosVision Optic</h3>
+          <p class="product-function">Attendance Management + Vision-Powered 2FA</p>
+          <div class="badge-strip">
+            <span class="badge">Dynamic QR / NFC</span>
+            <span class="badge">Facial Recognition 2FA</span>
+            <span class="badge">Fast-Gate Scenarios</span>
+          </div>
+          <div class="modes-strip"><p class="product-modes">Zone · Portal</p></div>
+        </div>
+      </div>
+
+      <div class="card-d" style="background-image: url('../assets/talosvision-pulse.png');">
+        <span class="photo-credit">Photo</span>
+        <div class="card-d-content">
+          <span class="product-number">02 / Application</span>
+          <h3>TalosVision Pulse</h3>
+          <p class="product-function">Vision-Adaptive Digital Signage</p>
+          <div class="badge-strip">
+            <span class="badge">Read the Room</span>
+            <span class="badge">Auto-Trigger Playlists</span>
+            <span class="badge">Demographic-Driven Delivery</span>
+          </div>
+          <div class="modes-strip"><p class="product-modes">Focus · Portal · Zone</p></div>
+        </div>
+      </div>
+
+      <div class="card-d" style="background-image: url('../assets/talosvision-sonar.png');">
+        <span class="photo-credit">Photo</span>
+        <div class="card-d-content">
+          <span class="product-number">03 / Application</span>
+          <h3>TalosVision Sonar</h3>
+          <p class="product-function">Access Control + Area Monitoring</p>
+          <div class="badge-strip">
+            <span class="badge">Real-Time People Counters</span>
+            <span class="badge">Demographic Insights</span>
+            <span class="badge">Activity Heatmaps</span>
+          </div>
+          <div class="modes-strip"><p class="product-modes">Portal</p></div>
+        </div>
+      </div>
+
+      <div class="card-d" style="background-image: url('../assets/talosvision-aether.png');">
+        <span class="photo-credit">Photo</span>
+        <div class="card-d-content">
+          <span class="product-number">04 / Application</span>
+          <h3>TalosVision Aether</h3>
+          <p class="product-function">Wearable Mobile Security (Goggles + Drone)</p>
+          <div class="badge-strip">
+            <span class="badge">Instant Audio Alerts</span>
+            <span class="badge">Central Command Integration</span>
+            <span class="badge">Collaborative Marking</span>
+          </div>
+          <div class="modes-strip"><p class="product-modes">Wearable · Aerial</p></div>
+        </div>
+      </div>
+
+      <div class="card-d" style="background-image: url('../assets/talosvision-nexus.png');">
+        <span class="photo-credit">Photo</span>
+        <div class="card-d-content">
+          <span class="product-number">05 / Application</span>
+          <h3>TalosVision Nexus</h3>
+          <p class="product-function">Guard Monitoring & Personnel Vigilance Oversight</p>
+          <div class="badge-strip">
+            <span class="badge">Activity/Inactivity Detection</span>
+            <span class="badge">Customisable Alerts</span>
+            <span class="badge">Instant Notifications</span>
+          </div>
+          <div class="modes-strip"><p class="product-modes">Zone</p></div>
+        </div>
+      </div>
+
+      <div class="card-d" style="background-image: url('../assets/talos-vision-spectral.png');">
+        <span class="photo-credit">Photo</span>
+        <div class="card-d-content">
+          <span class="product-number">06 / Application</span>
+          <h3>TalosVision Spectral</h3>
+          <p class="product-function">Multi-Site Aggregation & Centralised Command</p>
+          <div class="badge-strip">
+            <span class="badge">6 Aggregated Report Types</span>
+            <span class="badge">Matrix Groups & Membership</span>
+            <span class="badge">SSO (JWT-Based)</span>
+          </div>
+          <div class="modes-strip"><p class="product-modes">All Modes — Aggregated</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     VARIATION E — SPLIT PANEL
+     ============================================================ -->
+<section class="section">
+  <div class="container">
+    <span class="section-label">Variation E</span>
+    <h2>Split Panel</h2>
+    <div class="accent-line"></div>
+    <p class="section-subtitle">Photo and content sit side-by-side in a clean editorial layout. Image anchors one half, text lives in the other. Stacks vertically on mobile.</p>
+
+    <div class="grid-e">
+      <div class="card-e">
+        <div class="card-e-img" style="background-image: url('../assets/talosvision-optic.png');"></div>
+        <div class="card-e-body">
+          <span class="product-number">01 / 06</span>
+          <h3>TalosVision Optic</h3>
+          <p class="product-function">Attendance Management + Vision-Powered 2FA</p>
+          <p class="card-e-desc">Seamlessly verify identity and track attendance with vision-powered 2FA, dynamic QR codes, and NFC — designed for high-throughput gates and scheduled entry points.</p>
+          <div class="badge-strip">
+            <span class="badge">Dynamic QR / NFC</span>
+            <span class="badge">Facial Recognition 2FA</span>
+            <span class="badge">Fast-Gate Scenarios</span>
+            <span class="badge">Scheduled Attendance</span>
+            <span class="badge">Guardian Notifications</span>
+            <span class="badge">Unauthorised Alerts</span>
+          </div>
+          <p class="product-modes">Zone · Portal</p>
+        </div>
+      </div>
+
+      <div class="card-e">
+        <div class="card-e-img" style="background-image: url('../assets/talosvision-pulse.png');"></div>
+        <div class="card-e-body">
+          <span class="product-number">02 / 06</span>
+          <h3>TalosVision Pulse</h3>
+          <p class="product-function">Vision-Adaptive Digital Signage</p>
+          <p class="card-e-desc">Adapt digital signage in real time based on who's watching — auto-trigger playlists, measure dwell time, and deliver demographically-targeted content.</p>
+          <div class="badge-strip">
+            <span class="badge">Read the Room</span>
+            <span class="badge">Auto-Trigger Playlists</span>
+            <span class="badge">Demographic-Driven Delivery</span>
+            <span class="badge">Impression Metrics</span>
+            <span class="badge">Content Management Portal</span>
+            <span class="badge">Dwell Time Analytics</span>
+          </div>
+          <p class="product-modes">Focus · Portal · Zone</p>
+        </div>
+      </div>
+
+      <div class="card-e">
+        <div class="card-e-img" style="background-image: url('../assets/talosvision-sonar.png');"></div>
+        <div class="card-e-body">
+          <span class="product-number">03 / 06</span>
+          <h3>TalosVision Sonar</h3>
+          <p class="product-function">Access Control + Area Monitoring</p>
+          <p class="card-e-desc">Monitor foot traffic, detect crowd build-up, flag tailgating events, and match watchlists — all through real-time annotated video streams and activity heatmaps.</p>
+          <div class="badge-strip">
+            <span class="badge">Real-Time People Counters</span>
+            <span class="badge">Demographic Insights</span>
+            <span class="badge">Activity Heatmaps</span>
+            <span class="badge">Crowd Build-Up Detection</span>
+            <span class="badge">Tailgating Flags</span>
+            <span class="badge">Live Annotated Streams</span>
+            <span class="badge">Watchlist Matching</span>
+          </div>
+          <p class="product-modes">Portal</p>
+        </div>
+      </div>
+
+      <div class="card-e">
+        <div class="card-e-img" style="background-image: url('../assets/talosvision-aether.png');"></div>
+        <div class="card-e-body">
+          <span class="product-number">04 / 06</span>
+          <h3>TalosVision Aether</h3>
+          <p class="product-function">Wearable Mobile Security (Goggles + Drone)</p>
+          <p class="card-e-desc">Empower mobile security personnel with wearable goggles and drone integration — instant face matching under 100ms, collaborative marking, and central command sync.</p>
+          <div class="badge-strip">
+            <span class="badge">Instant Audio Alerts</span>
+            <span class="badge">Central Command Integration</span>
+            <span class="badge">Collaborative Marking</span>
+            <span class="badge">Sub-100ms Face Match</span>
+            <span class="badge">Multi-Camera Mesh</span>
+            <span class="badge">Drone Mode</span>
+          </div>
+          <p class="product-modes">Wearable · Aerial</p>
+        </div>
+      </div>
+
+      <div class="card-e">
+        <div class="card-e-img" style="background-image: url('../assets/talosvision-nexus.png');"></div>
+        <div class="card-e-body">
+          <span class="product-number">05 / 06</span>
+          <h3>TalosVision Nexus</h3>
+          <p class="product-function">Guard Monitoring & Personnel Vigilance Oversight</p>
+          <p class="card-e-desc">Oversee guard vigilance across multiple posts with inactivity detection, customisable alerts, live annotated video, and automated shift handover reports.</p>
+          <div class="badge-strip">
+            <span class="badge">Activity/Inactivity Detection</span>
+            <span class="badge">Customisable Alerts</span>
+            <span class="badge">Instant Notifications</span>
+            <span class="badge">Live Video with Annotations</span>
+            <span class="badge">Shift Handover Reports</span>
+            <span class="badge">Multi-Post Monitoring</span>
+          </div>
+          <p class="product-modes">Zone</p>
+        </div>
+      </div>
+
+      <div class="card-e">
+        <div class="card-e-img" style="background-image: url('../assets/talos-vision-spectral.png');"></div>
+        <div class="card-e-body">
+          <span class="product-number">06 / 06</span>
+          <h3>TalosVision Spectral</h3>
+          <p class="product-function">Multi-Site Aggregation & Centralised Command</p>
+          <p class="card-e-desc">Aggregate data from all sites into a single pane of glass — unified alerts, cross-site analytics, SSO authentication, and degraded-mode resilience.</p>
+          <div class="badge-strip">
+            <span class="badge">6 Aggregated Report Types</span>
+            <span class="badge">Matrix Groups & Membership</span>
+            <span class="badge">SSO (JWT-Based)</span>
+            <span class="badge">Degraded Mode</span>
+            <span class="badge">60s Result Caching</span>
+            <span class="badge">Cross-Site Analytics</span>
+            <span class="badge">Unified Alert Management</span>
+          </div>
+          <p class="product-modes">All Modes — Aggregated</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     VARIATION F — FLOATING IMAGE ACCENT
+     ============================================================ -->
+<section class="section section-alt">
+  <div class="container">
+    <span class="section-label">Variation F</span>
+    <h2>Floating Image Accent</h2>
+    <div class="accent-line"></div>
+    <p class="section-subtitle">Text-forward card with a small elevated photo thumbnail peeking from the top-right corner. The photo acts as a supporting visual cue with a subtle cyan glow.</p>
+
+    <div class="grid-f">
+      <div class="card-f">
+        <div class="card-f-photo" style="background-image: url('../assets/talosvision-optic.png');"></div>
+        <div class="card-f-content">
+          <span class="product-number">01 / Application</span>
+          <h3>TalosVision Optic</h3>
+          <p class="product-function">Attendance Management + Vision-Powered 2FA</p>
+          <div class="badge-strip">
+            <span class="badge">Dynamic QR / NFC</span>
+            <span class="badge">Facial Recognition 2FA</span>
+            <span class="badge">Fast-Gate Scenarios</span>
+            <span class="badge">Scheduled Attendance</span>
+          </div>
+          <div class="modes-strip"><p class="product-modes">Zone · Portal</p></div>
+        </div>
+      </div>
+
+      <div class="card-f">
+        <div class="card-f-photo" style="background-image: url('../assets/talosvision-pulse.png');"></div>
+        <div class="card-f-content">
+          <span class="product-number">02 / Application</span>
+          <h3>TalosVision Pulse</h3>
+          <p class="product-function">Vision-Adaptive Digital Signage</p>
+          <div class="badge-strip">
+            <span class="badge">Read the Room</span>
+            <span class="badge">Auto-Trigger Playlists</span>
+            <span class="badge">Demographic-Driven Delivery</span>
+            <span class="badge">Impression Metrics</span>
+          </div>
+          <div class="modes-strip"><p class="product-modes">Focus · Portal · Zone</p></div>
+        </div>
+      </div>
+
+      <div class="card-f">
+        <div class="card-f-photo" style="background-image: url('../assets/talosvision-sonar.png');"></div>
+        <div class="card-f-content">
+          <span class="product-number">03 / Application</span>
+          <h3>TalosVision Sonar</h3>
+          <p class="product-function">Access Control + Area Monitoring</p>
+          <div class="badge-strip">
+            <span class="badge">Real-Time People Counters</span>
+            <span class="badge">Demographic Insights</span>
+            <span class="badge">Activity Heatmaps</span>
+            <span class="badge">Crowd Build-Up Detection</span>
+          </div>
+          <div class="modes-strip"><p class="product-modes">Portal</p></div>
+        </div>
+      </div>
+
+      <div class="card-f">
+        <div class="card-f-photo" style="background-image: url('../assets/talosvision-aether.png');"></div>
+        <div class="card-f-content">
+          <span class="product-number">04 / Application</span>
+          <h3>TalosVision Aether</h3>
+          <p class="product-function">Wearable Mobile Security (Goggles + Drone)</p>
+          <div class="badge-strip">
+            <span class="badge">Instant Audio Alerts</span>
+            <span class="badge">Central Command Integration</span>
+            <span class="badge">Collaborative Marking</span>
+            <span class="badge">Sub-100ms Face Match</span>
+          </div>
+          <div class="modes-strip"><p class="product-modes">Wearable · Aerial</p></div>
+        </div>
+      </div>
+
+      <div class="card-f">
+        <div class="card-f-photo" style="background-image: url('../assets/talosvision-nexus.png');"></div>
+        <div class="card-f-content">
+          <span class="product-number">05 / Application</span>
+          <h3>TalosVision Nexus</h3>
+          <p class="product-function">Guard Monitoring & Personnel Vigilance Oversight</p>
+          <div class="badge-strip">
+            <span class="badge">Activity/Inactivity Detection</span>
+            <span class="badge">Customisable Alerts</span>
+            <span class="badge">Instant Notifications</span>
+            <span class="badge">Live Video with Annotations</span>
+          </div>
+          <div class="modes-strip"><p class="product-modes">Zone</p></div>
+        </div>
+      </div>
+
+      <div class="card-f">
+        <div class="card-f-photo" style="background-image: url('../assets/talos-vision-spectral.png');"></div>
+        <div class="card-f-content">
+          <span class="product-number">06 / Application</span>
+          <h3>TalosVision Spectral</h3>
+          <p class="product-function">Multi-Site Aggregation & Centralised Command</p>
+          <div class="badge-strip">
+            <span class="badge">6 Aggregated Report Types</span>
+            <span class="badge">Matrix Groups & Membership</span>
+            <span class="badge">SSO (JWT-Based)</span>
+            <span class="badge">Degraded Mode</span>
+          </div>
+          <div class="modes-strip"><p class="product-modes">All Modes — Aggregated</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  const canvas = document.getElementById('geoBg');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    let animId;
+    function resize() { canvas.width = window.innerWidth; canvas.height = document.documentElement.scrollHeight; }
+    function drawGrid() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const step = 100, speed = 35, offset = (Date.now() / speed) % step, diagSpan = canvas.width + canvas.height;
+      ctx.strokeStyle = 'rgba(0, 212, 255, 0.18)'; ctx.lineWidth = 1;
+      for (let d = -step * 2 + offset; d < diagSpan + step * 2; d += step) { ctx.beginPath(); ctx.moveTo(d, 0); ctx.lineTo(d - canvas.height, canvas.height); ctx.stroke(); }
+      ctx.strokeStyle = 'rgba(59, 130, 246, 0.12)'; ctx.lineWidth = 0.6;
+      const cOff = (offset * 1.5) % step;
+      for (let d = -step * 2 - cOff; d < diagSpan + step * 2; d += step) { ctx.beginPath(); ctx.moveTo(d - canvas.height, 0); ctx.lineTo(d, canvas.height); ctx.stroke(); }
+      animId = requestAnimationFrame(function() { resize(); drawGrid(); });
+    }
+    resize(); drawGrid();
+    document.addEventListener('visibilitychange', function() { if (document.hidden) cancelAnimationFrame(animId); else { resize(); drawGrid(); } });
+  }
+})();
+</script>
+</body>
+</html>
