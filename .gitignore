@@ -33,3 +33,7 @@ yarn-error.log*
 # Build output
 dist/
 build/
+
+# Project-specific
+proposals/
+scripts/
